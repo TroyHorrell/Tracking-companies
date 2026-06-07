@@ -3,368 +3,685 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TFGI · Tracking Pipeline · June 2026</title>
+  <title>TFGI · Pipeline Dashboard · June 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    .card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); }
-    .pulse-red { animation: pulseRed 2s ease-in-out infinite; }
-    @keyframes pulseRed {
-      0%, 100% { border-color: #fca5a5; }
-      50%       { border-color: #ef4444; }
+
+    /* ── Drawer ── */
+    #drawer {
+      transform: translateX(100%);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
     }
-    .raising-soon { border-color: #fcd34d; }
+    #drawer.open { transform: translateX(0); }
+
+    /* ── Backdrop ── */
+    #backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+    #backdrop.visible { opacity: 1; pointer-events: auto; }
+
+    /* ── Active-deal red pulse ring ── */
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);    opacity: .7; }
+      70%  { transform: scale(1.02); opacity: 0;  }
+      100% { transform: scale(1.02); opacity: 0;  }
+    }
+    .pulse-ring::before {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 18px;
+      border: 2px solid #ef4444;
+      animation: pulse-ring 2s ease-out infinite;
+      pointer-events: none;
+    }
+
+    /* ── Card hover ── */
+    .company-card {
+      cursor: pointer;
+      transition: background 150ms, border-color 150ms, transform 150ms, box-shadow 150ms;
+    }
+    .company-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.5); }
+
+    /* ── Drawer scrollbar ── */
+    #drawer::-webkit-scrollbar { width: 5px; }
+    #drawer::-webkit-scrollbar-track { background: transparent; }
+    #drawer::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+
+    /* ── Connection-strength dots ── */
+    .dot-filled  { color: #818cf8; }
+    .dot-empty   { color: #374151; }
+
+    /* ── Filter active ── */
+    .filter-btn { transition: background 150ms, color 150ms; }
+    .filter-btn.active { background: #fff; color: #030712; font-weight: 600; }
+
+    /* ── Tier section dividers ── */
+    .tier-label { letter-spacing: .12em; }
   </style>
 </head>
-<body class="bg-[#f5f4f0] min-h-screen text-slate-800">
 
-  <!-- ─── HEADER ──────────────────────────────────────────────── -->
-  <header class="bg-white/95 backdrop-blur sticky top-0 z-20 border-b border-slate-100 shadow-sm">
-    <div class="max-w-screen-xl mx-auto px-8 py-4 flex items-center justify-between">
+<!-- ════════════════════════════════════════════════════════════ -->
+<body class="bg-gray-950 text-white min-h-screen">
 
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center shrink-0">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
-               stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-          </svg>
-        </div>
-        <div>
-          <div class="font-bold text-slate-900 text-[15px] leading-tight">The Friedkin Group Investments</div>
-          <div class="text-slate-400 text-[11px]">Tracking Pipeline · June 2026 · Strictly Confidential</div>
-        </div>
+  <!-- ── HEADER ─────────────────────────────────────────────── -->
+  <header class="bg-gray-900 border-b border-gray-800 px-8 h-[72px] flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-white rounded flex items-center justify-center shrink-0">
+        <span class="text-gray-950 font-black text-xs tracking-tight">TF</span>
       </div>
-
-      <div class="hidden md:flex items-center gap-5 text-[11px]">
-        <div class="flex items-center gap-5 text-slate-500">
-          <span class="flex items-center gap-1.5"><span class="text-amber-400 text-sm">★</span> Founder contact</span>
-          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-400 animate-pulse inline-block"></span> Active process</span>
-          <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded border-2 border-amber-300 inline-block"></span> Raising Q3–Q4 2026</span>
-        </div>
-        <div class="w-px h-4 bg-slate-200"></div>
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[11px]">Automotive</span>
-          <span class="px-2 py-0.5 bg-violet-50 text-violet-600 rounded text-[11px]">AI / SaaS</span>
-          <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[11px]">CleanTech</span>
-          <span class="px-2 py-0.5 bg-orange-50 text-orange-600 rounded text-[11px]">Logistics</span>
-          <span class="px-2 py-0.5 bg-rose-50 text-rose-700 rounded text-[11px]">Deep Tech</span>
-          <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[11px]">Robotics</span>
-        </div>
+      <div>
+        <div class="font-bold text-white text-base leading-tight">The Friedkin Group Investments</div>
+        <div class="text-gray-400 text-[11px]">Partner Pipeline Review · June 2026 · Strictly Confidential</div>
       </div>
-
+    </div>
+    <div class="hidden md:flex items-center gap-5 text-[11px] text-gray-400">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 inline-block animate-pulse"></span>Active deal</span>
+      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded border-2 border-yellow-400 inline-block"></span>Raising Q3–Q4 2026</span>
+      <span class="flex items-center gap-1.5 text-yellow-400">★<span class="text-gray-400">Direct founder contact</span></span>
+      <span class="text-gray-600">|</span>
+      <span class="text-gray-500">Click any card for context</span>
     </div>
   </header>
 
-  <main class="max-w-screen-xl mx-auto px-8 py-10 space-y-14">
+  <!-- ── FILTER BAR ──────────────────────────────────────────── -->
+  <nav class="sticky top-0 z-30 bg-gray-950/95 backdrop-blur border-b border-gray-800 px-8 py-3 flex items-center gap-2.5">
+    <button class="filter-btn active px-5 py-2 rounded-full text-sm bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="all">All</button>
+    <button class="filter-btn px-5 py-2 rounded-full text-sm bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="1">Key Companies</button>
+    <button class="filter-btn px-5 py-2 rounded-full text-sm bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="2">Other</button>
+    <button class="filter-btn px-5 py-2 rounded-full text-sm bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="raising">Raising Now</button>
+    <div class="ml-auto flex items-center gap-1.5 text-[11px] text-gray-500" id="card-count"></div>
+  </nav>
 
+  <!-- ── CARD GRID ───────────────────────────────────────────── -->
+  <main class="p-8 space-y-10" id="card-area">
 
-    <!-- ═══════════════════════════════════════════════════
-         TIER 1
-    ═══════════════════════════════════════════════════ -->
-    <section>
-      <div class="flex items-center gap-4 mb-7">
-        <div class="px-4 py-1.5 bg-slate-900 rounded-full flex items-center gap-2 shrink-0">
-          <span class="text-amber-400">★</span>
-          <span class="text-white text-[11px] font-semibold tracking-widest uppercase">Tier 1 — Highest Conviction · Stay Closest</span>
-        </div>
-        <div class="h-px flex-1 bg-slate-300"></div>
-        <span class="text-slate-400 text-xs shrink-0">10 companies</span>
+    <!-- Tier 1 -->
+    <section id="tier-1-section">
+      <div class="flex items-center gap-4 mb-5">
+        <span class="tier-label text-[10px] font-bold uppercase text-gray-500">Key Companies</span>
+        <div class="h-px flex-1 bg-gray-800"></div>
+        <span class="text-gray-600 text-[11px]" id="t1-count"></span>
       </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-
-        <!-- AIRWALLEX — active deal, red pulse border -->
-        <div class="card bg-white rounded-2xl p-5 border-2 pulse-red relative">
-          <div class="absolute top-3.5 right-3.5 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-          </div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">FinTech · Payments</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Airwallex</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Global payments & financial infrastructure · $902M raised</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Status</div>
-            <div class="text-[11px] font-bold text-red-600">🔴 Active — $3–5M allocation</div>
-          </div>
-        </div>
-
-        <!-- SOMANA — founder contact, amber border, POC deployed -->
-        <div class="card bg-white rounded-2xl p-5 border-2 border-amber-300 relative">
-          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">AI · Machine Vision</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Somana</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Machine vision AI · Stealth · NYC · POC deployed</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-slate-700">Seed · TBD</div>
-          </div>
-        </div>
-
-        <!-- FLAI — raising Q4 2026 soon -->
-        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive AI</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Flai</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI virtual assistant for car dealerships · Active POC evaluation</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
-          </div>
-        </div>
-
-        <!-- JIGCAR — founder contact, raising Q3 2026 -->
-        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
-          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive Logistics</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Jigcar</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI vehicle transport optimization for dealer groups · London</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
-          </div>
-        </div>
-
-        <!-- SANDRA AI — founder contact, raising Q4 2026 -->
-        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
-          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive AI · YC</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Sandra AI</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI receptionists & sales agents for dealerships</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
-          </div>
-        </div>
-
-        <!-- CARIQA — raising Q3 2026 -->
-        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-3">EV · CleanTech</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Cariqa</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">EV charging transaction management SaaS</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
-          </div>
-        </div>
-
-        <!-- TEM. — strong connection -->
-        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
-          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-3">CleanTech · Energy</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">tem.</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Renewable energy procurement SaaS · 1,500 customers · London</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-slate-700">Series C · Q3 2027</div>
-          </div>
-        </div>
-
-        <!-- OPUS TRAINING -->
-        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
-          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">Enterprise SaaS</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Opus Training</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Mobile frontline training for hospitality & retail</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-slate-700">Series C · Q3 2027</div>
-          </div>
-        </div>
-
-        <!-- PITPRO AUTOMATION -->
-        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded mb-3">Fleet · Robotics</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">PitPro Automation</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Automated tire service robots for fleet operators · SF</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-slate-700">Seed · TBD</div>
-          </div>
-        </div>
-
-        <!-- AMEBA -->
-        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-orange-50 text-orange-600 rounded mb-3">Supply Chain AI</span>
-          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Ameba</h3>
-          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI supply chain visibility for fashion & apparel</p>
-          <div class="border-t border-slate-100 pt-3 space-y-0.5">
-            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
-            <div class="text-[11px] font-semibold text-slate-700">Series A · Q1 2027</div>
-          </div>
-        </div>
-
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5" id="grid-tier-1"></div>
     </section>
 
-
-    <!-- ═══════════════════════════════════════════════════
-         TIER 2
-    ═══════════════════════════════════════════════════ -->
-    <section>
-      <div class="flex items-center gap-4 mb-6">
-        <div class="px-4 py-1.5 bg-slate-600 rounded-full shrink-0">
-          <span class="text-white text-[11px] font-semibold tracking-widest uppercase">Tier 2 — Active Watch</span>
-        </div>
-        <div class="h-px flex-1 bg-slate-300"></div>
-        <span class="text-slate-400 text-xs shrink-0">14 companies</span>
+    <!-- Tier 2 -->
+    <section id="tier-2-section">
+      <div class="flex items-center gap-4 mb-5">
+        <span class="tier-label text-[10px] font-bold uppercase text-gray-600">Other — Active Watch</span>
+        <div class="h-px flex-1 bg-gray-800"></div>
+        <span class="text-gray-600 text-[11px]" id="t2-count"></span>
       </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3">
-
-        <!-- Parallel Systems -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded mb-2">Mobility</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Parallel Systems</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Autonomous electric rail cargo</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series C · Q4 2026 ↑</div>
-        </div>
-
-        <!-- Dataplor — founder contact -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <div class="absolute top-2.5 right-2.5 text-amber-400 text-sm" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Data · Analytics</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Dataplor</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Global POI & location intelligence</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series C · Q4 2026 ↑</div>
-        </div>
-
-        <!-- Rynse -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded mb-2">Fleet SaaS</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Rynse</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Fleet vehicle care management</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
-        </div>
-
-        <!-- Volteras -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">EV Tech</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Volteras</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">EV vehicle telemetry & data platform</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series B · Q4 2026 ↑</div>
-        </div>
-
-        <!-- Nevoya -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">CleanTech</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Nevoya</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">All-electric truckload carrier</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
-        </div>
-
-        <!-- infinitform -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Mfg AI</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">infinitform</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Generative AI for CAD optimization</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
-        </div>
-
-        <!-- Matta -->
-        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Mfg AI</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Matta</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Industrial AI & manufacturing OS</p>
-          <div class="text-[10px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
-        </div>
-
-        <!-- GenLogs — founder contact -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <div class="absolute top-2.5 right-2.5 text-amber-400 text-sm" title="Direct founder contact established">★</div>
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded mb-2">Logistics</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">GenLogs</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Real-time freight intelligence</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series D · Q2 2028</div>
-        </div>
-
-        <!-- Sourgum Waste -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">CleanTech</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Sourgum Waste</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Smart waste management platform</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series B · Q1 2027</div>
-        </div>
-
-        <!-- Lace Lithography -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-rose-50 text-rose-700 rounded mb-2">Deep Tech</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Lace Lithography</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Beyond-EUV chip patterning · Norway</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series B · Q4 2027</div>
-        </div>
-
-        <!-- Qargo -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded mb-2">Logistics</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Qargo TMS</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Cloud TMS for European logistics</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series C · Q3 2027</div>
-        </div>
-
-        <!-- Rebar -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Construction AI</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Rebar</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">AI HVAC estimating for construction</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series B · Q3 2027</div>
-        </div>
-
-        <!-- Overland AI -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded mb-2">Defense Tech</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Overland AI</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Autonomous ground vehicles · defense</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series C · Q3 2027</div>
-        </div>
-
-        <!-- Vermillio -->
-        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
-          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">AI · Media</span>
-          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Vermillio</h3>
-          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">AI-powered rights management</p>
-          <div class="text-[10px] font-semibold text-slate-600">Series B · Q3 2027</div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ═══════════════════════════════════════════════════
-         RAISING Q3–Q4 2026 CALLOUT
-    ═══════════════════════════════════════════════════ -->
-    <section class="bg-amber-50 border border-amber-200 rounded-2xl px-8 py-6">
-      <div class="flex items-start gap-3 mb-4">
-        <span class="text-amber-500 text-lg mt-0.5">⏱</span>
-        <div>
-          <h4 class="font-bold text-amber-900 text-sm">Raising in the next 6 months — act now</h4>
-          <p class="text-amber-700 text-[11px] mt-0.5">These companies are expected to open their next round before the end of 2026</p>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Jigcar — Series A · Jul 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Cariqa — Series A · Jul 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Rynse — Series A · Aug 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">infinitform — Series A · Aug 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Dataplor — Series C · Sep 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Parallel Systems — Series C · Oct 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Flai — Series A · Oct 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Matta — Series A · Oct 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Volteras — Series B · Oct 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Nevoya — Series A · Oct 2026</span>
-        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Sandra AI — Series A · Oct 2026</span>
-      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4" id="grid-tier-2"></div>
     </section>
 
   </main>
 
-  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
-  <footer class="mt-8 border-t border-slate-200 py-5 px-8">
-    <div class="max-w-screen-xl mx-auto flex items-center justify-between text-[11px] text-slate-400">
-      <span>The Friedkin Group Investments · Strictly Confidential · June 2026</span>
-      <span>★ = Direct founder contact established &nbsp;|&nbsp; Gold border = Raising Q3–Q4 2026 &nbsp;|&nbsp; Red pulse = Active deal process</span>
+  <!-- ── BACKDROP ────────────────────────────────────────────── -->
+  <div id="backdrop" class="fixed inset-0 bg-black/70 z-40"></div>
+
+  <!-- ── DRAWER ─────────────────────────────────────────────── -->
+  <aside id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[520px] z-50 bg-gray-900 border-l border-gray-700 overflow-y-auto shadow-2xl">
+
+    <!-- Drawer header (sticky) -->
+    <div class="sticky top-0 bg-gray-900 border-b border-gray-800 px-7 pt-6 pb-5 z-10">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span id="d-tier-badge" class="text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full bg-gray-700 text-gray-400"></span>
+            <span id="d-founder-star" class="text-yellow-400 text-lg hidden" title="Direct founder contact established">★</span>
+          </div>
+          <h2 id="d-name" class="text-2xl font-bold text-white leading-tight"></h2>
+          <p id="d-description" class="text-gray-400 text-sm mt-1"></p>
+        </div>
+        <button id="drawer-close" class="text-gray-500 hover:text-white text-2xl leading-none mt-1 shrink-0 transition-colors">×</button>
+      </div>
     </div>
-  </footer>
+
+    <!-- Drawer body -->
+    <div class="px-7 py-6 space-y-6">
+
+      <!-- Next Action (most prominent) -->
+      <div class="bg-indigo-950 border border-indigo-700 rounded-xl p-4">
+        <div class="text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-1.5">Next Action</div>
+        <p id="d-next-action" class="text-white text-base font-semibold leading-snug"></p>
+      </div>
+
+      <!-- Last Contact -->
+      <div>
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5">Last Contact</div>
+        <div id="d-last-contact" class="text-gray-200 text-sm"></div>
+        <div id="d-contact-type" class="text-gray-500 text-xs mt-0.5"></div>
+      </div>
+
+      <!-- Key Contact -->
+      <div>
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5">Key Contact</div>
+        <div id="d-key-contact" class="text-white text-sm font-medium"></div>
+      </div>
+
+      <!-- Where we left off -->
+      <div>
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5">Where We Left Off</div>
+        <p id="d-narrative" class="text-gray-300 text-sm leading-relaxed"></p>
+      </div>
+
+      <!-- Fundraise -->
+      <div>
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5">Fundraise Timeline</div>
+        <div id="d-round" class="text-white text-sm font-semibold"></div>
+        <div id="d-fundraise-detail" class="text-gray-400 text-xs mt-0.5 leading-relaxed"></div>
+      </div>
+
+      <!-- Connection strength -->
+      <div>
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5">Connection Strength</div>
+        <div id="d-strength" class="text-xl tracking-widest"></div>
+        <div id="d-strength-label" class="text-gray-500 text-xs mt-0.5"></div>
+      </div>
+
+      <!-- Attio ID -->
+      <div class="pt-2 border-t border-gray-800">
+        <span class="text-gray-600 text-xs">Attio record: </span>
+        <span id="d-attio" class="text-gray-500 text-xs font-mono"></span>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <script>
+  // ── DATA ───────────────────────────────────────────────────
+  const COMPANIES = [
+
+    // ────────────────────── TIER 1 ──────────────────────────
+
+    {
+      id: "airwallex", name: "Airwallex", tier: 1,
+      description: "Global payments & financial infrastructure platform · $902M raised",
+      sector: "FinTech · Payments", sectorBg: "bg-indigo-900", sectorText: "text-indigo-300",
+      currentStage: "Series F", nextRound: "Series G+", nextRaiseDate: "Q4 2027",
+      urgency: "active", directContact: false,
+      lastContact: "Jun 4, 2026", contactType: "Email — BNVT Capital coordination",
+      keyContact: "Via BNVT Capital (intermediary)",
+      narrative: "Troy is seeking a $3–5M co-invest allocation in Airwallex's current round. Multiple emails in the past week coordinating access through BNVT Capital. Troy noted he still needs to complete IC diligence before committing.",
+      nextAction: "Complete IC diligence materials and confirm allocation with BNVT Capital — live deal, time-sensitive",
+      fundraiseDetail: "Current round open now. IC diligence in progress.",
+      strength: 2, strengthLabel: "Relationship via intermediary — not direct",
+      attioId: "2d7d42bc"
+    },
+    {
+      id: "somana", name: "Somana", tier: 1,
+      description: "Machine vision AI · Stealth · New York City",
+      sector: "AI · Machine Vision", sectorBg: "bg-violet-900", sectorText: "text-violet-300",
+      currentStage: "Stealth / Pre-Seed", nextRound: "Seed", nextRaiseDate: "TBD",
+      urgency: "watch", directContact: true,
+      lastContact: "Jun 4, 2026", contactType: "Email — ongoing thread",
+      keyContact: "Somana founders — via Jon Goh",
+      narrative: "Jon Goh spent time with the Somana founders and was 'very impressed with their capability, speed and agility.' Two machine vision systems have already been deployed as a live POC. Jon extended an invitation for the founders to attend TFGI's MLB/250th America gala dinner in May.",
+      nextAction: "Confirm gala dinner follow-up — maintain warmth and track seed raise timing as they emerge from stealth",
+      fundraiseDetail: "No public fundraise yet — stealth stage. POC already deployed with TFG.",
+      strength: 2, strengthLabel: "Weak in Attio, but operationally very warm — POC live",
+      attioId: "3a12b12d"
+    },
+    {
+      id: "flai", name: "Flai", tier: 1,
+      description: "AI virtual assistant and digital tools for car dealerships",
+      sector: "Automotive AI", sectorBg: "bg-blue-900", sectorText: "text-blue-300",
+      currentStage: "Seed ($4.5M, Oct 2025)", nextRound: "Series A", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "Apr 6, 2026", contactType: "Meeting / Calendar",
+      keyContact: "TFGI team — internal POC evaluation",
+      narrative: "TFGI was actively evaluating Flai alongside Mia for a dealership AI POC. Jon Goh noted structured thinking around 'where value and defensibility accrues across 5 major players' in the space. Flai was featured at the Toyota Startup Summit (Mar 30), which TFGI flagged as a strong validator.",
+      nextAction: "Conclude POC evaluation — make a Series A participation decision ahead of Q4 raise",
+      fundraiseDetail: "Series A expected Q4 2026. Outreach date: Jul 1 2026.",
+      strength: 5, strengthLabel: "Very Strong — highest Attio connection in Tier 1",
+      attioId: "c1f4790d"
+    },
+    {
+      id: "jigcar", name: "Jigcar", tier: 1,
+      description: "AI vehicle transport optimization for dealer groups · London",
+      sector: "Automotive Logistics", sectorBg: "bg-sky-900", sectorText: "text-sky-300",
+      currentStage: "Seed ($5M, Sep 2025)", nextRound: "Series A", nextRaiseDate: "Q3 2026",
+      urgency: "upcoming", directContact: true,
+      lastContact: "May 16, 2026", contactType: "Email — direct founder thread",
+      keyContact: "Elliott Perks (CEO) — direct email contact",
+      narrative: "Troy introduced Elliott Perks (CEO) to Robert Tang at TFG to explore applying Jigcar's vehicle transport optimization to US dealer car-movement flows. Active back-and-forth on a potential BD or POC arrangement. 10% reduction in vehicle transport spend and 2-day reduction in days-to-sell already proven in EU.",
+      nextAction: "Follow up on the Robert Tang / Elliott Perks conversation — confirm Series A timing and TFGI participation interest",
+      fundraiseDetail: "Series A expected Q3 2026. Outreach date: Apr 1 2026 (may need refreshing).",
+      strength: 3, strengthLabel: "Good — active founder relationship, BD in progress",
+      attioId: "428b0773"
+    },
+    {
+      id: "sandra-ai", name: "Sandra AI", tier: 1,
+      description: "AI receptionists & sales agents for car dealerships · YC",
+      sector: "Automotive AI · YC", sectorBg: "bg-blue-900", sectorText: "text-blue-300",
+      currentStage: "Seed ($1.5M, Dec 2024)", nextRound: "Series A", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: true,
+      lastContact: "Mar 23, 2026", contactType: "Meeting — in-person lunch",
+      keyContact: "Badr El Idrissi (CEO) — in-person lunch with Jon & Troy",
+      narrative: "Jon and Troy had an in-person lunch with Badr El Idrissi (CEO) in March 2026. At the time Sandra AI had just closed a seed round. The team is warm with the founders and monitoring for the Series A. YC-backed with a direct dealership use case strongly aligned to TFG's portfolio.",
+      nextAction: "Re-engage ahead of Q4 Series A — confirm timeline and interest in TFGI participation",
+      fundraiseDetail: "Series A expected Q4 2026. Outreach date: Sep 1 2026.",
+      strength: 3, strengthLabel: "Good — warm founder relationship, in-person meeting done",
+      attioId: "811ad210"
+    },
+    {
+      id: "cariqa", name: "Cariqa", tier: 1,
+      description: "EV charging transaction management SaaS for fleet operators",
+      sector: "EV · CleanTech", sectorBg: "bg-emerald-900", sectorText: "text-emerald-300",
+      currentStage: "Seed (~$4.7M, Jul 2025)", nextRound: "Series A", nextRaiseDate: "Q3 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "Apr 24, 2026", contactType: "Attio interaction — regular engagement",
+      keyContact: "TFGI team",
+      narrative: "Active tracking since September 2025. Strong Attio connection strength signals consistent team engagement. Listed in TFGI's core outreach pipeline with Series A expected Q3 2026. EV charging directly relevant to TFG's fleet operations.",
+      nextAction: "Reach out to confirm Series A is on track for Q3 and assess TFGI participation interest",
+      fundraiseDetail: "Series A expected Q3 2026. Outreach date: Jun 1 2026.",
+      strength: 4, strengthLabel: "Strong — consistent engagement since Sep 2025",
+      attioId: "fcf8dc02"
+    },
+    {
+      id: "tem", name: "tem.", tier: 1,
+      description: "Renewable energy procurement SaaS — direct power purchase agreements",
+      sector: "CleanTech · Energy", sectorBg: "bg-emerald-900", sectorText: "text-emerald-300",
+      currentStage: "Series B ($75M, Jan 2026)", nextRound: "Series C", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: true,
+      lastContact: "May 28, 2026", contactType: "Meeting / Calendar interaction",
+      keyContact: "tem. team — Atomico (lead investor)",
+      narrative: "tem. recently closed a $75M Series B led by Atomico. TFGI has a strong Attio connection and had a calendar interaction as recently as May 28. The company has 1,500 customers and has saved £20M in transaction costs. Strong momentum with web traffic and revenue signals.",
+      nextAction: "Maintain relationship ahead of Series C — explore co-invest or secondary opportunity via Atomico network",
+      fundraiseDetail: "Series C expected Q3 2027. Outreach date: Apr 1 2027.",
+      strength: 4, strengthLabel: "Strong — top Attio connection, recently active",
+      attioId: "c135ff09"
+    },
+    {
+      id: "opus-training", name: "Opus Training", tier: 1,
+      description: "Mobile-first training platform for frontline hospitality & retail workers",
+      sector: "Enterprise SaaS", sectorBg: "bg-purple-900", sectorText: "text-purple-300",
+      currentStage: "Series B ($9M, Feb 2026)", nextRound: "Series C", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: true,
+      lastContact: "Apr 17, 2026", contactType: "Attio interaction",
+      keyContact: "TFGI team",
+      narrative: "Strong ongoing relationship with Opus Training. Series B closed Feb 2026. TFGI tracks this as high priority. Highly relevant to TFG's hospitality and retail operating companies, where frontline training is a recurring pain point.",
+      nextAction: "Stay close — explore TFG operating company pilots. Re-engage ahead of Series C (Q3 2027)",
+      fundraiseDetail: "Series C expected Q3 2027. Outreach date: Apr 1 2027.",
+      strength: 4, strengthLabel: "Strong — active Attio connection, high strategic fit",
+      attioId: "470655b0"
+    },
+    {
+      id: "pitpro", name: "PitPro Automation", tier: 1,
+      description: "Automated tire service robots for fleet operators · San Francisco",
+      sector: "Fleet · Robotics", sectorBg: "bg-slate-700", sectorText: "text-slate-300",
+      currentStage: "Pre-funded", nextRound: "Seed", nextRaiseDate: "TBD",
+      urgency: "watch", directContact: false,
+      lastContact: "May 14, 2026", contactType: "Meeting",
+      keyContact: "TFGI team — SF Bay Area",
+      narrative: "Strong Attio connection established since first contact in March 2026. TFGI has had regular interaction with the team. Pre-funded at this stage, exploring seed round options. Automated tire service directly relevant to TFG's fleet and automotive service businesses.",
+      nextAction: "Determine seed round timing and TFGI appetite for early-stage robotics — assess strategic fit with TFG fleet operations",
+      fundraiseDetail: "Pre-funded — seed round timing TBD. Strategic investment or partnership possible.",
+      strength: 4, strengthLabel: "Strong — consistent meetings, high strategic relevance",
+      attioId: "c8ee4667"
+    },
+    {
+      id: "ameba", name: "Ameba", tier: 1,
+      description: "AI supply chain visibility platform for fashion & apparel brands",
+      sector: "Supply Chain AI", sectorBg: "bg-orange-900", sectorText: "text-orange-300",
+      currentStage: "Seed ($7.1M, Oct 2024)", nextRound: "Series A", nextRaiseDate: "Q1 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "May 6, 2026", contactType: "Email",
+      keyContact: "TFGI team — outreach ongoing",
+      narrative: "TFGI has made multiple outreach attempts (4+) with limited response. Despite cold outreach, TFGI maintains conviction in the business. Last interaction was May 6 2026.",
+      nextAction: "Find a warm introduction path — leverage existing investor network to get in front of the founder rather than cold outreach",
+      fundraiseDetail: "Series A expected Q1 2027. Outreach date: Oct 1 2026.",
+      strength: 1, strengthLabel: "Very Weak — 4x outreach attempts with limited response",
+      attioId: "89445a7c"
+    },
+
+    // ────────────────────── TIER 2 ──────────────────────────
+
+    {
+      id: "parallel-systems", name: "Parallel Systems", tier: 2,
+      description: "Autonomous electric rail cargo vehicles for freight networks",
+      sector: "Mobility", sectorBg: "bg-sky-900", sectorText: "text-sky-300",
+      currentStage: "Series B ($38M, Apr 2025)", nextRound: "Series C", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "Apr 23, 2026", contactType: "Attio interaction",
+      keyContact: "Introduced via external party (Mar 2026)",
+      narrative: "Introduced to TFGI via external party in March 2026. TFGI responded it was researching but didn't have something immediately actionable. Good Attio connection strength suggests continued engagement.",
+      nextAction: "Re-engage ahead of Series C — position around TFG's logistics and rail infrastructure interests",
+      fundraiseDetail: "Series C expected Q4 2026. Outreach date: Jul 1 2026.",
+      strength: 3, strengthLabel: "Good — introduced, active tracking",
+      attioId: "7dc8d213"
+    },
+    {
+      id: "dataplor", name: "Dataplor", tier: 2,
+      description: "Global point-of-interest and location intelligence platform",
+      sector: "Data · Analytics", sectorBg: "bg-cyan-900", sectorText: "text-cyan-300",
+      currentStage: "Series B ($20.5M, Jun 2025)", nextRound: "Series C", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: true,
+      lastContact: "May 7, 2026", contactType: "Email + Calendar (direct CEO)",
+      keyContact: "Geoff Michener (CEO) — multiple direct emails",
+      narrative: "Multiple direct email exchanges with Geoff Michener (CEO) in May 2026. TFGI noted internally it's an 'incredible information source but harder to find end-use applications.' Flagged alongside GenLogs in Troy's June 4 pipeline note as needing a clearer monetization path for TFG.",
+      nextAction: "Identify a specific TFG use case (dealer location data?) before Series C commitment — define the value thesis",
+      fundraiseDetail: "Series C expected Q4 2026. Outreach date: Sep 1 2026.",
+      strength: 3, strengthLabel: "Good — strong CEO relationship, use-case clarity needed",
+      attioId: "8e316b01"
+    },
+    {
+      id: "rynse", name: "Rynse", tier: 2,
+      description: "Fleet vehicle care and wash management SaaS platform",
+      sector: "Fleet SaaS", sectorBg: "bg-blue-900", sectorText: "text-blue-300",
+      currentStage: "Seed ($5M, Jan 2025)", nextRound: "Series A", nextRaiseDate: "Q3 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "May 1, 2026", contactType: "Email (follow-up sent)",
+      keyContact: "TFGI team — Troy following up",
+      narrative: "Troy sent a follow-up email May 1 noting 'Things are going well at Rynse.' Outreach task confirmed done in Apr 24 tracking. Series A is approaching imminently — Q3 2026.",
+      nextAction: "Confirm Series A is opening and request a call to assess TFGI participation",
+      fundraiseDetail: "Series A expected Q3 2026. Outreach date: Aug 1 2026.",
+      strength: 2, strengthLabel: "Weak — light relationship, consistent tracking",
+      attioId: "6132faa2"
+    },
+    {
+      id: "volteras", name: "Volteras", tier: 2,
+      description: "EV vehicle telemetry and data connectivity platform",
+      sector: "EV Tech", sectorBg: "bg-emerald-900", sectorText: "text-emerald-300",
+      currentStage: "Series A (~$14.6M, Apr 2025)", nextRound: "Series B", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "May 21, 2026", contactType: "Calendar interaction",
+      keyContact: "'Jess' — TFGI contact (unresponsive)",
+      narrative: "Attio tasks reference 'chasing Jess' with limited response. Calendar interaction as recently as May 19 suggests some engagement but relationship is thin. Series B expected Q4 2026.",
+      nextAction: "Escalate beyond 'Jess' — find direct path to founder or another exec ahead of Series B",
+      fundraiseDetail: "Series B expected Q4 2026. Outreach date: Jul 1 2026.",
+      strength: 2, strengthLabel: "Weak — outreach not converting, need new angle",
+      attioId: "d8682bdd"
+    },
+    {
+      id: "nevoya", name: "Nevoya", tier: 2,
+      description: "All-electric truckload carrier disrupting long-haul freight",
+      sector: "CleanTech · Freight", sectorBg: "bg-emerald-900", sectorText: "text-emerald-300",
+      currentStage: "Seed ($9.3M, Jul 2025)", nextRound: "Series A", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "Feb 2026", contactType: "Email / NeverLift intro",
+      keyContact: "Via NeverLift network — Troy assigned",
+      narrative: "Introduced via NeverLift network in Feb 2026. Listed in Troy's outreach tracking. Connection is early-stage and hasn't deepened significantly since the intro.",
+      nextAction: "Re-engage and confirm Series A timeline — build relationship before Q4 round opens",
+      fundraiseDetail: "Series A expected Q4 2026. Outreach date: Jul 1 2026.",
+      strength: 2, strengthLabel: "Weak — intro done, relationship not yet warm",
+      attioId: "28811abc"
+    },
+    {
+      id: "infinitform", name: "infinitform", tier: 2,
+      description: "Generative AI platform for CAD design optimization",
+      sector: "Manufacturing AI", sectorBg: "bg-teal-900", sectorText: "text-teal-300",
+      currentStage: "Seed ($12.7M, May 2025)", nextRound: "Series A", nextRaiseDate: "Q3 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "Apr 23, 2026", contactType: "Email — via Root.VC's Kane",
+      keyContact: "Kane (Root.VC) — investor intermediary",
+      narrative: "Deep diligence conducted via Root.VC's Kane. Key concern identified: Anthropic x Autodesk MCP integration was flagged as a competitive risk to infinitform's core design optimization proposition. Troy exchanged views on buyer profile and competitive risk mitigation.",
+      nextAction: "Resolve the Anthropic/Autodesk competitive risk question before making a Series A decision — confirm whether infinitform's moat holds",
+      fundraiseDetail: "Series A expected Q3 2026. Outreach date: May 1 2026 (may be past — check status).",
+      strength: 2, strengthLabel: "Weak direct — deep diligence via investor intermediary",
+      attioId: "40e7d7fc"
+    },
+    {
+      id: "matta", name: "Matta", tier: 2,
+      description: "Industrial AI and manufacturing operating system",
+      sector: "Manufacturing AI", sectorBg: "bg-teal-900", sectorText: "text-teal-300",
+      currentStage: "Seed ($14M, Dec 2025)", nextRound: "Series A", nextRaiseDate: "Q4 2026",
+      urgency: "upcoming", directContact: false,
+      lastContact: "May 7, 2026", contactType: "Email — outreach drafted via Giant Ventures",
+      keyContact: "Cameron McLain (Giant Ventures) — intro path identified",
+      narrative: "Troy drafted an outreach to Cameron McLain at Giant Ventures seeking an introduction to Matta's founders. Charlie Daniel responded positively. Introduction has not yet been confirmed — no direct company contact established yet.",
+      nextAction: "Chase Cameron McLain at Giant Ventures for the Matta intro — arrange first meeting ahead of Series A",
+      fundraiseDetail: "Series A expected Q4 2026. Outreach date: Sep 1 2026.",
+      strength: 1, strengthLabel: "No direct relationship — intro path identified only",
+      attioId: "d53e2f51"
+    },
+    {
+      id: "genlogs", name: "GenLogs", tier: 2,
+      description: "Real-time freight intelligence and logistics data platform",
+      sector: "Logistics", sectorBg: "bg-amber-900", sectorText: "text-amber-300",
+      currentStage: "Series C (May 2026)", nextRound: "Series D", nextRaiseDate: "Q2 2028",
+      urgency: "watch", directContact: true,
+      lastContact: "Apr 15, 2026", contactType: "Meeting — Ryan Joyce (CEO) + Charlie Daniel",
+      keyContact: "Ryan Joyce (CEO) — direct meeting",
+      narrative: "Direct meeting with Ryan Joyce (CEO) in April attended by Charlie Daniel. Troy's internal note (Jun 4) describes GenLogs as an 'incredible information source but more difficult to find end-use applications.' A Series B co-invest was flagged as potentially inbound.",
+      nextAction: "Define the specific TFGI/TFG use case before committing — revisit co-invest at Series D (Q2 2028)",
+      fundraiseDetail: "Series D expected Q2 2028. Long time horizon — maintain relationship.",
+      strength: 2, strengthLabel: "Weak direct — one CEO meeting, monetization risk flagged",
+      attioId: "763b16c8"
+    },
+    {
+      id: "sourgum", name: "Sourgum Waste", tier: 2,
+      description: "Smart waste management and commercial recycling platform",
+      sector: "CleanTech", sectorBg: "bg-emerald-900", sectorText: "text-emerald-300",
+      currentStage: "Series A ($12.5M, Apr 2025)", nextRound: "Series B", nextRaiseDate: "Q1 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "Apr 26, 2026", contactType: "Meeting — calendar interaction Apr 16",
+      keyContact: "TFGI team — fast relationship build",
+      narrative: "First contact April 2026. Calendar interaction Apr 16. Good connection established quickly since first contact. Series B expected Q1 2027.",
+      nextAction: "Stay warm — re-engage Q4 2026 ahead of Series B. Relevant to TFG's operational real estate",
+      fundraiseDetail: "Series B expected Q1 2027. Outreach date: Oct 1 2026.",
+      strength: 3, strengthLabel: "Good — fast relationship build since April",
+      attioId: "d2a59bad"
+    },
+    {
+      id: "lace", name: "Lace Lithography", tier: 2,
+      description: "Beyond-EUV chip patterning technology · next-gen semiconductor lithography · Norway",
+      sector: "Deep Tech", sectorBg: "bg-rose-900", sectorText: "text-rose-300",
+      currentStage: "Series A ($40M, Dec 2025)", nextRound: "Series B", nextRaiseDate: "Q4 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "Feb 2026", contactType: "Research — AlphaSense deep dive commissioned",
+      keyContact: "Atomico (investor) — intro path identified",
+      narrative: "TFGI commissioned AlphaSense deep research on Lace Lithography in Jan–Feb 2026. Attio task assigned Feb 2026 to 'engage with Atomico / company to validate the commercial setting.' Flagged as a 'large opportunity with exploding end market.'",
+      nextAction: "Initiate contact via Atomico to validate commercial pathway — no direct company contact made yet",
+      fundraiseDetail: "Series B expected Q4 2027. Long time horizon — research and relationship phase.",
+      strength: 1, strengthLabel: "Research phase only — no direct company contact yet",
+      attioId: "b4067000"
+    },
+    {
+      id: "qargo", name: "Qargo TMS", tier: 2,
+      description: "Cloud-native transport management system for European logistics operators",
+      sector: "Logistics SaaS", sectorBg: "bg-amber-900", sectorText: "text-amber-300",
+      currentStage: "Series B ($33M, Dec 2025)", nextRound: "Series C", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "Apr 21, 2026", contactType: "Attio interaction",
+      keyContact: "TFGI team — active since Oct 2025",
+      narrative: "Active tracking since October 2025. Good Attio connection strength. Series B recently closed December 2025. European TMS with strong product.",
+      nextAction: "Maintain relationship — re-engage 3 months ahead of Series C (target Q1 2027 outreach)",
+      fundraiseDetail: "Series C expected Q3 2027. Outreach date: Mar 1 2027.",
+      strength: 3, strengthLabel: "Good — consistent engagement, Series B just closed",
+      attioId: "6068035f"
+    },
+    {
+      id: "rebar", name: "Rebar", tier: 2,
+      description: "AI-powered HVAC takeoffs and estimating for the construction industry",
+      sector: "Construction AI", sectorBg: "bg-violet-900", sectorText: "text-violet-300",
+      currentStage: "Series A ($14M, Mar 2026)", nextRound: "Series B", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "Unknown", contactType: "Pipeline tracking only",
+      keyContact: "TFGI team — limited contact confirmed",
+      narrative: "In TFGI pipeline for Series B. Series A closed March 2026. Limited context on depth of existing relationship — needs a direct outreach to establish contact before the Series B cycle.",
+      nextAction: "Initiate first direct outreach — establish relationship well before Series B opens",
+      fundraiseDetail: "Series B expected Q3 2027. Outreach date: Sep 2026.",
+      strength: 1, strengthLabel: "Unknown — pipeline only, no confirmed interaction",
+      attioId: "1fe0a858"
+    },
+    {
+      id: "overland-ai", name: "Overland AI", tier: 2,
+      description: "Autonomous ground vehicle software for US military and defense",
+      sector: "Defense Tech", sectorBg: "bg-slate-700", sectorText: "text-slate-300",
+      currentStage: "Series B ($20M, Feb 2026)", nextRound: "Series C", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "Apr 27, 2026 (task due — overdue)", contactType: "Attio task overdue — not yet actioned",
+      keyContact: "TFGI team — Troy assigned (overdue)",
+      narrative: "An Attio task was assigned to Troy on Apr 27 to initiate outreach to Overland AI. As of last check this task was overdue and no outreach had been made. Series B closed Feb 2026 — the window for Series C relationship building is open now.",
+      nextAction: "⚠️ Action overdue — Troy to initiate first outreach to Overland AI immediately",
+      fundraiseDetail: "Series C expected Q3 2027. Outreach window: now — Series B just closed.",
+      strength: 1, strengthLabel: "No contact made — overdue action item",
+      attioId: "a00ceda7"
+    },
+    {
+      id: "vermillio", name: "Vermillio", tier: 2,
+      description: "AI-powered rights management and content licensing platform",
+      sector: "AI · Media", sectorBg: "bg-violet-900", sectorText: "text-violet-300",
+      currentStage: "Series A ($16M, Mar 2025)", nextRound: "Series B", nextRaiseDate: "Q3 2027",
+      urgency: "watch", directContact: false,
+      lastContact: "May 21, 2026", contactType: "Attio interaction",
+      keyContact: "TFGI team — first contact Feb 2025",
+      narrative: "One of the longer-running relationships in the pipeline — first contact Feb 2025. Good Attio connection. Recent interaction May 2026. Media rights AI is an emerging thesis for TFGI.",
+      nextAction: "Maintain warm relationship — re-engage ahead of Series B in Q3 2027",
+      fundraiseDetail: "Series B expected Q3 2027. Outreach date: Sep 2026.",
+      strength: 3, strengthLabel: "Good — long-running relationship since Feb 2025",
+      attioId: "6430b414"
+    }
+
+  ]
+
+  // ── SECTOR COLORS ─────────────────────────────────────────
+  const URGENCY_MAP = {
+    active:    { border: "border-2 border-red-500",    label: "Active Deal", labelColor: "text-red-400", extraClass: "pulse-ring relative" },
+    upcoming:  { border: "border-2 border-yellow-400", label: "Raising Q3–Q4 2026", labelColor: "text-yellow-400", extraClass: "" },
+    watch:     { border: "border border-gray-700",     label: "", labelColor: "", extraClass: "" }
+  }
+
+  const STRENGTH_LABELS = ["", "Very Weak", "Weak", "Good", "Strong", "Very Strong"]
+
+  // ── BUILD CARD HTML ───────────────────────────────────────
+  function buildCard(c) {
+    const u = URGENCY_MAP[c.urgency]
+    const tierBase = c.tier === 1
+      ? "bg-gray-900 rounded-2xl p-6"
+      : "bg-gray-900/70 rounded-xl p-5"
+    const titleSize = c.tier === 1 ? "text-xl" : "text-base"
+
+    return `
+    <article class="company-card ${tierBase} ${u.border} ${u.extraClass}"
+             data-id="${c.id}" data-tier="${c.tier}" data-urgency="${c.urgency}">
+      <div class="flex items-start justify-between mb-3">
+        <span class="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full ${c.sectorBg} ${c.sectorText}">${c.sector}</span>
+        ${c.directContact ? `<span class="text-yellow-400 text-lg leading-none shrink-0 ml-2" title="Direct founder contact established">★</span>` : ''}
+      </div>
+      <h3 class="${titleSize} font-bold text-white mb-1 leading-tight">${c.name}</h3>
+      <p class="text-gray-400 text-xs leading-relaxed mb-4">${c.description}</p>
+      <div class="border-t border-gray-800 pt-3 flex items-end justify-between">
+        <div>
+          <div class="text-[9px] text-gray-600 uppercase tracking-widest mb-0.5">Next raise</div>
+          <div class="text-xs font-semibold ${c.urgency === 'active' ? 'text-red-400' : c.urgency === 'upcoming' ? 'text-yellow-400' : 'text-gray-300'}">${c.nextRound} · ${c.nextRaiseDate}</div>
+        </div>
+        ${u.label ? `<span class="text-[9px] font-bold uppercase tracking-wide ${u.labelColor}">${u.label}</span>` : ''}
+      </div>
+    </article>`
+  }
+
+  // ── RENDER ────────────────────────────────────────────────
+  function render(filter) {
+    const g1 = document.getElementById('grid-tier-1')
+    const g2 = document.getElementById('grid-tier-2')
+    const t1s = document.getElementById('tier-1-section')
+    const t2s = document.getElementById('tier-2-section')
+
+    let t1 = COMPANIES.filter(c => c.tier === 1)
+    let t2 = COMPANIES.filter(c => c.tier === 2)
+
+    if (filter === '1')       { t2 = []; t2s.style.display = 'none' } else { t2s.style.display = '' }
+    if (filter === '2')       { t1 = []; t1s.style.display = 'none' } else { t1s.style.display = '' }
+    if (filter === 'raising') {
+      t1 = t1.filter(c => c.urgency === 'active' || c.urgency === 'upcoming')
+      t2 = t2.filter(c => c.urgency === 'active' || c.urgency === 'upcoming')
+    }
+
+    g1.innerHTML = t1.map(buildCard).join('')
+    g2.innerHTML = t2.map(buildCard).join('')
+
+    document.getElementById('t1-count').textContent = t1.length ? `${t1.length} companies` : ''
+    document.getElementById('t2-count').textContent = t2.length ? `${t2.length} companies` : ''
+
+    // re-attach click listeners
+    document.querySelectorAll('.company-card').forEach(el => {
+      el.addEventListener('click', () => openDrawer(el.dataset.id))
+    })
+  }
+
+  // ── DRAWER ────────────────────────────────────────────────
+  function dots(n) {
+    return `<span class="dot-filled">${'●'.repeat(n)}</span><span class="dot-empty">${'○'.repeat(5 - n)}</span>`
+  }
+
+  function openDrawer(id) {
+    const c = COMPANIES.find(x => x.id === id)
+    if (!c) return
+
+    document.getElementById('d-name').textContent = c.name
+    document.getElementById('d-description').textContent = c.description
+    document.getElementById('d-tier-badge').textContent = c.tier === 1 ? 'Key Company' : 'Active Watch'
+    document.getElementById('d-tier-badge').className =
+      `text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full ${c.tier === 1 ? 'bg-indigo-900 text-indigo-300' : 'bg-gray-700 text-gray-400'}`
+
+    const star = document.getElementById('d-founder-star')
+    c.directContact ? star.classList.remove('hidden') : star.classList.add('hidden')
+
+    document.getElementById('d-next-action').textContent = c.nextAction
+    document.getElementById('d-last-contact').textContent = c.lastContact
+    document.getElementById('d-contact-type').textContent = c.contactType
+    document.getElementById('d-key-contact').textContent = c.keyContact
+    document.getElementById('d-narrative').textContent = c.narrative
+
+    const roundEl = document.getElementById('d-round')
+    roundEl.textContent = `${c.nextRound} · ${c.nextRaiseDate}`
+    roundEl.className = `text-sm font-semibold ${c.urgency === 'active' ? 'text-red-400' : c.urgency === 'upcoming' ? 'text-yellow-400' : 'text-white'}`
+    document.getElementById('d-fundraise-detail').textContent = c.fundraiseDetail
+
+    document.getElementById('d-strength').innerHTML = dots(c.strength)
+    document.getElementById('d-strength-label').textContent = `${STRENGTH_LABELS[c.strength]} — ${c.strengthLabel}`
+    document.getElementById('d-attio').textContent = c.attioId
+
+    document.getElementById('drawer').classList.add('open')
+    const bd = document.getElementById('backdrop')
+    bd.classList.remove('hidden')
+    requestAnimationFrame(() => bd.classList.add('visible'))
+    document.body.style.overflow = 'hidden'
+    document.getElementById('drawer').scrollTop = 0
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open')
+    const bd = document.getElementById('backdrop')
+    bd.classList.remove('visible')
+    setTimeout(() => bd.classList.add('hidden'), 200)
+    document.body.style.overflow = ''
+  }
+
+  // ── FILTERS ───────────────────────────────────────────────
+  let activeFilter = 'all'
+
+  function setFilter(f) {
+    activeFilter = f
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === f)
+    })
+    render(f)
+  }
+
+  // ── INIT ──────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    render('all')
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => setFilter(btn.dataset.filter))
+    })
+
+    document.getElementById('backdrop').addEventListener('click', closeDrawer)
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer)
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer() })
+  })
+  </script>
 
 </body>
 </html>
