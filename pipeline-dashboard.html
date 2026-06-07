@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TFGI · Tracking Pipeline · June 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    .card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); }
+    .pulse-red { animation: pulseRed 2s ease-in-out infinite; }
+    @keyframes pulseRed {
+      0%, 100% { border-color: #fca5a5; }
+      50%       { border-color: #ef4444; }
+    }
+    .raising-soon { border-color: #fcd34d; }
+  </style>
+</head>
+<body class="bg-[#f5f4f0] min-h-screen text-slate-800">
+
+  <!-- ─── HEADER ──────────────────────────────────────────────── -->
+  <header class="bg-white/95 backdrop-blur sticky top-0 z-20 border-b border-slate-100 shadow-sm">
+    <div class="max-w-screen-xl mx-auto px-8 py-4 flex items-center justify-between">
+
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center shrink-0">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="font-bold text-slate-900 text-[15px] leading-tight">The Friedkin Group Investments</div>
+          <div class="text-slate-400 text-[11px]">Tracking Pipeline · June 2026 · Strictly Confidential</div>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center gap-5 text-[11px]">
+        <div class="flex items-center gap-5 text-slate-500">
+          <span class="flex items-center gap-1.5"><span class="text-amber-400 text-sm">★</span> Founder contact</span>
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-400 animate-pulse inline-block"></span> Active process</span>
+          <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded border-2 border-amber-300 inline-block"></span> Raising Q3–Q4 2026</span>
+        </div>
+        <div class="w-px h-4 bg-slate-200"></div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[11px]">Automotive</span>
+          <span class="px-2 py-0.5 bg-violet-50 text-violet-600 rounded text-[11px]">AI / SaaS</span>
+          <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[11px]">CleanTech</span>
+          <span class="px-2 py-0.5 bg-orange-50 text-orange-600 rounded text-[11px]">Logistics</span>
+          <span class="px-2 py-0.5 bg-rose-50 text-rose-700 rounded text-[11px]">Deep Tech</span>
+          <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[11px]">Robotics</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="max-w-screen-xl mx-auto px-8 py-10 space-y-14">
+
+
+    <!-- ═══════════════════════════════════════════════════
+         TIER 1
+    ═══════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-4 mb-7">
+        <div class="px-4 py-1.5 bg-slate-900 rounded-full flex items-center gap-2 shrink-0">
+          <span class="text-amber-400">★</span>
+          <span class="text-white text-[11px] font-semibold tracking-widest uppercase">Tier 1 — Highest Conviction · Stay Closest</span>
+        </div>
+        <div class="h-px flex-1 bg-slate-300"></div>
+        <span class="text-slate-400 text-xs shrink-0">10 companies</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+
+        <!-- AIRWALLEX — active deal, red pulse border -->
+        <div class="card bg-white rounded-2xl p-5 border-2 pulse-red relative">
+          <div class="absolute top-3.5 right-3.5 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          </div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">FinTech · Payments</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Airwallex</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Global payments & financial infrastructure · $902M raised</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Status</div>
+            <div class="text-[11px] font-bold text-red-600">🔴 Active — $3–5M allocation</div>
+          </div>
+        </div>
+
+        <!-- SOMANA — founder contact, amber border, POC deployed -->
+        <div class="card bg-white rounded-2xl p-5 border-2 border-amber-300 relative">
+          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">AI · Machine Vision</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Somana</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Machine vision AI · Stealth · NYC · POC deployed</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-slate-700">Seed · TBD</div>
+          </div>
+        </div>
+
+        <!-- FLAI — raising Q4 2026 soon -->
+        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive AI</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Flai</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI virtual assistant for car dealerships · Active POC evaluation</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
+          </div>
+        </div>
+
+        <!-- JIGCAR — founder contact, raising Q3 2026 -->
+        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
+          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive Logistics</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Jigcar</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI vehicle transport optimization for dealer groups · London</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
+          </div>
+        </div>
+
+        <!-- SANDRA AI — founder contact, raising Q4 2026 -->
+        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
+          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded mb-3">Automotive AI · YC</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Sandra AI</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI receptionists & sales agents for dealerships</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
+          </div>
+        </div>
+
+        <!-- CARIQA — raising Q3 2026 -->
+        <div class="card bg-white rounded-2xl p-5 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-3">EV · CleanTech</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Cariqa</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">EV charging transaction management SaaS</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
+          </div>
+        </div>
+
+        <!-- TEM. — strong connection -->
+        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
+          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-3">CleanTech · Energy</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">tem.</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Renewable energy procurement SaaS · 1,500 customers · London</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-slate-700">Series C · Q3 2027</div>
+          </div>
+        </div>
+
+        <!-- OPUS TRAINING -->
+        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
+          <div class="absolute top-3.5 right-3.5 text-amber-400 text-base" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-violet-50 text-violet-600 rounded mb-3">Enterprise SaaS</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Opus Training</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Mobile frontline training for hospitality & retail</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-slate-700">Series C · Q3 2027</div>
+          </div>
+        </div>
+
+        <!-- PITPRO AUTOMATION -->
+        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded mb-3">Fleet · Robotics</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">PitPro Automation</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">Automated tire service robots for fleet operators · SF</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-slate-700">Seed · TBD</div>
+          </div>
+        </div>
+
+        <!-- AMEBA -->
+        <div class="card bg-white rounded-2xl p-5 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-2 py-0.5 bg-orange-50 text-orange-600 rounded mb-3">Supply Chain AI</span>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1 leading-tight">Ameba</h3>
+          <p class="text-slate-400 text-[11px] leading-relaxed mb-4">AI supply chain visibility for fashion & apparel</p>
+          <div class="border-t border-slate-100 pt-3 space-y-0.5">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wide">Next raise</div>
+            <div class="text-[11px] font-semibold text-slate-700">Series A · Q1 2027</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════
+         TIER 2
+    ═══════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-4 mb-6">
+        <div class="px-4 py-1.5 bg-slate-600 rounded-full shrink-0">
+          <span class="text-white text-[11px] font-semibold tracking-widest uppercase">Tier 2 — Active Watch</span>
+        </div>
+        <div class="h-px flex-1 bg-slate-300"></div>
+        <span class="text-slate-400 text-xs shrink-0">14 companies</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3">
+
+        <!-- Parallel Systems -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded mb-2">Mobility</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Parallel Systems</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Autonomous electric rail cargo</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series C · Q4 2026 ↑</div>
+        </div>
+
+        <!-- Dataplor — founder contact -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <div class="absolute top-2.5 right-2.5 text-amber-400 text-sm" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Data · Analytics</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Dataplor</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Global POI & location intelligence</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series C · Q4 2026 ↑</div>
+        </div>
+
+        <!-- Rynse -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded mb-2">Fleet SaaS</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Rynse</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Fleet vehicle care management</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
+        </div>
+
+        <!-- Volteras -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">EV Tech</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Volteras</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">EV vehicle telemetry & data platform</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series B · Q4 2026 ↑</div>
+        </div>
+
+        <!-- Nevoya -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">CleanTech</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Nevoya</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">All-electric truckload carrier</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
+        </div>
+
+        <!-- infinitform -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Mfg AI</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">infinitform</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Generative AI for CAD optimization</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series A · Q3 2026 ↑</div>
+        </div>
+
+        <!-- Matta -->
+        <div class="card bg-white rounded-xl p-4 border-2 raising-soon relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Mfg AI</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Matta</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Industrial AI & manufacturing OS</p>
+          <div class="text-[10px] font-semibold text-amber-600">Series A · Q4 2026 ↑</div>
+        </div>
+
+        <!-- GenLogs — founder contact -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <div class="absolute top-2.5 right-2.5 text-amber-400 text-sm" title="Direct founder contact established">★</div>
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded mb-2">Logistics</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">GenLogs</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Real-time freight intelligence</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series D · Q2 2028</div>
+        </div>
+
+        <!-- Sourgum Waste -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded mb-2">CleanTech</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Sourgum Waste</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Smart waste management platform</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series B · Q1 2027</div>
+        </div>
+
+        <!-- Lace Lithography -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-rose-50 text-rose-700 rounded mb-2">Deep Tech</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Lace Lithography</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Beyond-EUV chip patterning · Norway</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series B · Q4 2027</div>
+        </div>
+
+        <!-- Qargo -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded mb-2">Logistics</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Qargo TMS</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Cloud TMS for European logistics</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series C · Q3 2027</div>
+        </div>
+
+        <!-- Rebar -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">Construction AI</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Rebar</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">AI HVAC estimating for construction</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series B · Q3 2027</div>
+        </div>
+
+        <!-- Overland AI -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded mb-2">Defense Tech</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Overland AI</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">Autonomous ground vehicles · defense</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series C · Q3 2027</div>
+        </div>
+
+        <!-- Vermillio -->
+        <div class="card bg-white rounded-xl p-4 border border-slate-100 relative">
+          <span class="inline-block text-[10px] font-semibold px-1.5 py-0.5 bg-violet-50 text-violet-600 rounded mb-2">AI · Media</span>
+          <h3 class="font-semibold text-slate-900 text-[13px] mb-1 leading-tight">Vermillio</h3>
+          <p class="text-slate-400 text-[10px] leading-relaxed mb-2.5">AI-powered rights management</p>
+          <div class="text-[10px] font-semibold text-slate-600">Series B · Q3 2027</div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════
+         RAISING Q3–Q4 2026 CALLOUT
+    ═══════════════════════════════════════════════════ -->
+    <section class="bg-amber-50 border border-amber-200 rounded-2xl px-8 py-6">
+      <div class="flex items-start gap-3 mb-4">
+        <span class="text-amber-500 text-lg mt-0.5">⏱</span>
+        <div>
+          <h4 class="font-bold text-amber-900 text-sm">Raising in the next 6 months — act now</h4>
+          <p class="text-amber-700 text-[11px] mt-0.5">These companies are expected to open their next round before the end of 2026</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Jigcar — Series A · Jul 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Cariqa — Series A · Jul 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Rynse — Series A · Aug 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">infinitform — Series A · Aug 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Dataplor — Series C · Sep 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Parallel Systems — Series C · Oct 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Flai — Series A · Oct 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Matta — Series A · Oct 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Volteras — Series B · Oct 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Nevoya — Series A · Oct 2026</span>
+        <span class="px-3 py-1 bg-white border border-amber-300 rounded-full text-[11px] font-semibold text-amber-800">Sandra AI — Series A · Oct 2026</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="mt-8 border-t border-slate-200 py-5 px-8">
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between text-[11px] text-slate-400">
+      <span>The Friedkin Group Investments · Strictly Confidential · June 2026</span>
+      <span>★ = Direct founder contact established &nbsp;|&nbsp; Gold border = Raising Q3–Q4 2026 &nbsp;|&nbsp; Red pulse = Active deal process</span>
+    </div>
+  </footer>
+
+</body>
+</html>
