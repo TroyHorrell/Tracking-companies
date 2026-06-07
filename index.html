@@ -9,21 +9,15 @@
   <style>
     * { font-family: 'Inter', system-ui, sans-serif; }
     html, body { height: 100%; overflow: hidden; }
-
-    /* ── Calendar layout ── */
     #calendar-scroll { height: calc(100vh - 116px); overflow-x: auto; overflow-y: hidden; display: flex; align-items: stretch; }
-    .col { flex-shrink: 0; width: 222px; display: flex; flex-direction: column; border-right: 1px solid #1f2937; }
-    .col-body { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .col { flex-shrink: 0; width: 210px; display: flex; flex-direction: column; border-right: 1px solid #1f2937; }
+    .col-body { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
     .col-body::-webkit-scrollbar { width: 3px; }
     .col-body::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
-
-    /* ── List layout ── */
     #list-scroll { height: calc(100vh - 116px); overflow-y: auto; }
     #list-scroll::-webkit-scrollbar { width: 5px; }
     #list-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
-
-    /* ── Tiles ── */
-    .tile { cursor: pointer; border-radius: 9px; padding: 11px 12px; border: 1px solid transparent; transition: background 140ms, border-color 140ms, transform 130ms; }
+    .tile { cursor: pointer; border-radius: 8px; padding: 9px 10px; border: 1px solid transparent; transition: background 140ms, border-color 140ms, transform 130ms; }
     .tile:hover { transform: translateY(-1px); }
     .tile-1 { background: #1c2336; border-color: #2d3a52; border-left: 2px solid #6366f1; }
     .tile-1:hover { background: #232c44; border-color: #4f6699; }
@@ -31,9 +25,7 @@
     .tile-2:hover { background: #19202e; border-color: #374151; }
     .tile-active { background: #1c0f0f; border-color: #7f1d1d; border-left: 2px solid #ef4444; }
     .tile-active:hover { background: #231212; border-color: #ef4444; }
-
-    /* ── List tiles (wider) ── */
-    .list-tile { cursor: pointer; border-radius: 10px; padding: 14px 16px; border: 1px solid transparent; transition: background 140ms, border-color 140ms, transform 130ms; display: flex; align-items: center; gap: 14px; }
+    .list-tile { cursor: pointer; border-radius: 10px; padding: 12px 16px; border: 1px solid transparent; transition: background 140ms, border-color 140ms, transform 130ms; display: flex; align-items: center; gap: 14px; }
     .list-tile:hover { transform: translateX(2px); }
     .list-tile-1 { background: #1c2336; border-color: #2d3a52; border-left: 3px solid #6366f1; }
     .list-tile-1:hover { background: #232c44; }
@@ -41,36 +33,23 @@
     .list-tile-2:hover { background: #19202e; }
     .list-tile-active { background: #1c0f0f; border-color: #7f1d1d; border-left: 3px solid #ef4444; }
     .list-tile-active:hover { background: #231212; }
-    .hidden-tile { display: none !important; }
-
-    /* ── Drawer ── */
     #drawer { transform: translateX(100%); transition: transform 300ms cubic-bezier(0.4,0,0.2,1); will-change: transform; }
     #drawer.open { transform: translateX(0); }
     #backdrop { opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
     #backdrop.visible { opacity: 1; pointer-events: auto; }
     #drawer::-webkit-scrollbar { width: 4px; }
     #drawer::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
-
-    /* ── Nav / filter buttons ── */
     .nav-btn { transition: background 140ms, color 140ms; }
     .nav-btn.on { background: #fff; color: #030712; font-weight: 700; }
     .f-btn { transition: background 140ms, color 140ms; }
     .f-btn.on { background: #fff; color: #030712; font-weight: 600; }
-
-    /* ── Ping ── */
     @keyframes ping { 75%,100% { transform: scale(2); opacity: 0; } }
     .ping { animation: ping 1.2s cubic-bezier(0,0,.2,1) infinite; }
-
-    /* ── Year divider ── */
     .year-band { writing-mode: vertical-rl; transform: rotate(180deg); }
   </style>
 </head>
-
 <body class="bg-gray-950 text-white">
 
-  <!-- ══════════════════════════════════════════════════════
-       HEADER
-  ══════════════════════════════════════════════════════ -->
   <header class="h-[64px] bg-gray-900 border-b border-gray-800 px-6 flex items-center justify-between shrink-0">
     <div class="flex items-center gap-3">
       <div class="w-7 h-7 bg-white rounded flex items-center justify-center shrink-0">
@@ -81,13 +60,10 @@
         <div class="text-gray-500 text-[10px]">Pipeline · June 2026 · Confidential</div>
       </div>
     </div>
-
-    <!-- Page nav -->
     <div class="flex items-center gap-1.5 bg-gray-800 rounded-full p-1">
       <button class="nav-btn on px-4 py-1.5 rounded-full text-xs text-gray-300" id="nav-calendar" onclick="showPage('calendar')">📅 Calendar</button>
       <button class="nav-btn px-4 py-1.5 rounded-full text-xs text-gray-300" id="nav-list" onclick="showPage('list')">≡ List</button>
     </div>
-
     <div class="flex items-center gap-4 text-[11px] text-gray-500">
       <span class="flex items-center gap-1.5"><span class="relative flex h-2 w-2"><span class="ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>Active deal</span>
       <span class="text-yellow-400">★<span class="text-gray-500"> Founder contact</span></span>
@@ -96,12 +72,7 @@
     </div>
   </header>
 
-  <!-- ══════════════════════════════════════════════════════
-       FILTER BAR
-  ══════════════════════════════════════════════════════ -->
   <nav class="h-[52px] bg-gray-950 border-b border-gray-800 px-6 flex items-center gap-2.5" id="filter-bar">
-
-    <!-- Calendar filters -->
     <div id="cal-filters" class="flex items-center gap-2">
       <button class="f-btn on px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" data-filter="all">All</button>
       <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" data-filter="1">Key Companies</button>
@@ -109,11 +80,9 @@
       <div class="w-px h-4 bg-gray-700 mx-0.5"></div>
       <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" id="cal-founder-btn">★ Founder contact</button>
     </div>
-
-    <!-- List filters -->
     <div id="list-filters" class="flex items-center gap-2 hidden">
       <button class="f-btn on px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" data-lfilter="all">All</button>
-      <button class="f-btn on px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300 !bg-red-900/60 !text-red-300" data-lfilter="raising" id="list-raising-btn">Raising Now</button>
+      <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300 !bg-red-900/60 !text-red-300" data-lfilter="raising" id="list-raising-btn">Raising Now</button>
       <div class="w-px h-4 bg-gray-700 mx-0.5"></div>
       <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" data-ltier="all" id="lt-all">All Tiers</button>
       <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" data-ltier="1" id="lt-1">Key Companies</button>
@@ -121,19 +90,15 @@
       <div class="w-px h-4 bg-gray-700 mx-0.5"></div>
       <button class="f-btn px-4 py-1.5 rounded-full text-xs bg-gray-800 text-gray-300" id="list-founder-btn">★ Founder contact</button>
     </div>
-
     <div class="ml-auto text-[11px] text-gray-600" id="count-label"></div>
   </nav>
 
-  <!-- ══════════════════════════════════════════════════════
-       CALENDAR VIEW
-  ══════════════════════════════════════════════════════ -->
   <div id="page-calendar">
     <div id="calendar-scroll">
 
       <!-- Active Now -->
       <div class="col" style="border-right:1px solid #450a0a">
-        <div class="px-4 pt-4 pb-3 border-b border-red-900/50">
+        <div class="px-3 pt-3 pb-2 border-b border-red-900/50">
           <div class="text-[9px] font-bold uppercase tracking-widest text-red-500 mb-0.5">Active</div>
           <div class="text-sm font-bold text-white">Now</div>
           <div class="text-[10px] text-red-400 mt-0.5">Live deal</div>
@@ -147,7 +112,7 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2026</div>
           <div class="text-sm font-bold text-white">Q3</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Jul — Sep</div>
@@ -156,7 +121,7 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2026</div>
           <div class="text-sm font-bold text-white">Q4</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Oct — Dec</div>
@@ -170,7 +135,7 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2027</div>
           <div class="text-sm font-bold text-white">Q1</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Jan — Mar</div>
@@ -179,7 +144,16 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
+          <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2027</div>
+          <div class="text-sm font-bold text-white">Q2</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">Apr — Jun</div>
+        </div>
+        <div class="col-body" id="col-q2-2027"></div>
+      </div>
+
+      <div class="col">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2027</div>
           <div class="text-sm font-bold text-white">Q3</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Jul — Sep</div>
@@ -188,7 +162,7 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2027</div>
           <div class="text-sm font-bold text-white">Q4</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Oct — Dec</div>
@@ -202,7 +176,16 @@
       </div>
 
       <div class="col">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
+          <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2028</div>
+          <div class="text-sm font-bold text-white">Q1</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">Jan — Mar</div>
+        </div>
+        <div class="col-body" id="col-q1-2028"></div>
+      </div>
+
+      <div class="col">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">2028</div>
           <div class="text-sm font-bold text-white">Q2</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Apr — Jun</div>
@@ -212,7 +195,7 @@
 
       <!-- TBD -->
       <div class="col" style="border-right:none">
-        <div class="px-4 pt-4 pb-3 border-b border-gray-800">
+        <div class="px-3 pt-3 pb-2 border-b border-gray-800">
           <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-0.5">Timing</div>
           <div class="text-sm font-bold text-white">TBD</div>
           <div class="text-[10px] text-gray-500 mt-0.5">Unknown / Stealth</div>
@@ -223,18 +206,12 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       LIST VIEW
-  ══════════════════════════════════════════════════════ -->
   <div id="page-list" class="hidden">
     <div id="list-scroll">
       <div class="max-w-4xl mx-auto px-8 py-6 space-y-2" id="list-container"></div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       BACKDROP + DRAWER
-  ══════════════════════════════════════════════════════ -->
   <div id="backdrop" class="fixed inset-0 bg-black/70 z-40"></div>
 
   <aside id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[480px] z-50 bg-gray-900 border-l border-gray-700 overflow-y-auto shadow-2xl">
@@ -252,384 +229,764 @@
         <button id="drawer-close" class="text-gray-500 hover:text-white text-3xl leading-none mt-0.5 shrink-0 transition-colors">×</button>
       </div>
     </div>
-
     <div class="px-6 py-5 space-y-5">
-
-      <!-- Next Action -->
       <div class="bg-indigo-950 border border-indigo-800 rounded-xl p-4">
         <div class="text-[9px] font-bold uppercase tracking-widest text-indigo-400 mb-1.5">Next Action</div>
         <p id="d-next-action" class="text-white text-sm font-semibold leading-snug"></p>
       </div>
-
       <div>
         <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-1.5">Last Contact</div>
         <div id="d-last-contact" class="text-gray-200 text-sm font-medium"></div>
         <div id="d-contact-type" class="text-gray-500 text-xs mt-0.5"></div>
       </div>
-
       <div>
         <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-1.5">Where We Left Off</div>
         <p id="d-narrative" class="text-gray-300 text-sm leading-relaxed"></p>
       </div>
-
       <div>
         <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-1.5">Fundraise</div>
         <div id="d-round" class="text-sm font-semibold"></div>
         <div id="d-fundraise-detail" class="text-gray-500 text-xs mt-0.5 leading-relaxed"></div>
       </div>
-
       <div>
         <div class="text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-1.5">Connection Strength</div>
         <div id="d-dots" class="text-lg tracking-widest mb-0.5"></div>
         <div id="d-strength-label" class="text-gray-500 text-xs"></div>
       </div>
-
       <div class="pt-3 border-t border-gray-800 text-[10px] text-gray-600">
         Attio: <span id="d-attio" class="font-mono text-gray-500"></span>
       </div>
     </div>
   </aside>
 
-  <!-- ════════════════════════════════════════════════════════ -->
   <script>
-  // ── DATA ──────────────────────────────────────────────────
-  // q = quarter column (active / q3-2026 / q4-2026 / q1-2027 / q3-2027 / q4-2027 / q2-2028 / tbd)
-  // raising = true if round expected within ~6 months (Q3 or Q4 2026, or active)
+  // q values: active / q3-2026 / q4-2026 / q1-2027 / q2-2027 / q3-2027 / q4-2027 / q1-2028 / q2-2028 / tbd
+  // raising:true = round expected within ~3 months (active or Q3 2026)
   const CO = [
-    {
-      id:'airwallex', tier:1, q:'active', raising:true, dc:true,
-      name:'Airwallex',
-      sector:'FinTech · Payments', sb:'bg-indigo-900', st:'text-indigo-300',
-      stage:'Series F ($330M, Dec 2025)', nr:'Series G+', nrd:'Active Now',
-      desc:'Global payments and financial infrastructure platform',
-      lc:'Jun 4, 2026', ct:'Email — coordination with BNVT Capital',
-      narr:'Troy is pursuing a $3–5M co-invest allocation in the current round. Access is being coordinated through BNVT Capital. IC diligence still needs to be completed before committing.',
-      na:'Complete IC diligence and confirm allocation with BNVT Capital — live process, time-sensitive',
-      fd:'Round open now. TFGI pursuing co-invest allocation.',
-      str:2, sl:'Relationship currently via intermediary, not direct',
-      aid:'2d7d42bc'
-    },
-    {
-      id:'jigcar', tier:1, q:'q3-2026', raising:true, dc:true,
-      name:'Jigcar',
-      sector:'Automotive', sb:'bg-sky-900', st:'text-sky-300',
-      stage:'Seed ($5M, Sep 2025)', nr:'Series A', nrd:'Q3 2026',
-      desc:'AI vehicle transport optimisation for dealer groups · London',
-      lc:'May 16, 2026', ct:'Email — direct founder thread',
-      narr:'Troy introduced the CEO (Elliott Perks) to Robert Tang at TFG to explore applying Jigcar\'s platform to US dealer car-movement flows. Active conversation around a potential BD arrangement or POC. The product demonstrates a 10% reduction in transport spend and 2-day reduction in days-to-sell.',
-      na:'Follow up on the Robert Tang conversation — confirm Series A timing and TFGI participation',
-      fd:'Series A expected Q3 2026. Outreach date: Apr 2026.',
-      str:3, sl:'Good — direct founder relationship established',
-      aid:'428b0773'
-    },
-    {
-      id:'cariqa', tier:1, q:'q3-2026', raising:true, dc:false,
-      name:'Cariqa',
-      sector:'EV · CleanTech', sb:'bg-emerald-900', st:'text-emerald-300',
-      stage:'Seed (~$4.7M, Jul 2025)', nr:'Series A', nrd:'Q3 2026',
-      desc:'EV charging transaction management SaaS',
-      lc:'Apr 24, 2026', ct:'Attio — ongoing engagement',
-      narr:'Active tracking since September 2025. Strong Attio connection strength signals consistent team engagement. EV charging is directly relevant to TFG fleet operations.',
-      na:'Reach out to confirm Series A timeline and discuss TFGI participation interest',
-      fd:'Series A expected Q3 2026. Outreach date: Jun 2026.',
-      str:4, sl:'Strong — consistent engagement since Sep 2025',
-      aid:'fcf8dc02'
-    },
-    {
-      id:'flai', tier:1, q:'q4-2026', raising:false, dc:false,
-      name:'Flai',
-      sector:'Automotive AI', sb:'bg-blue-900', st:'text-blue-300',
-      stage:'Seed ($4.5M, Oct 2025)', nr:'Series A', nrd:'Q4 2026',
-      desc:'AI virtual assistant and digital tools for car dealerships',
-      lc:'Apr 6, 2026', ct:'Meeting — internal POC evaluation',
-      narr:'TFGI was evaluating Flai alongside Mia for a dealership AI POC. Jon Goh mapped "where value/defensibility accrues across 5 major players." Flai appeared at the Toyota Startup Summit (Mar 30), which TFGI flagged as a strong validator.',
-      na:'Conclude POC evaluation and make a Series A participation decision ahead of Q4 raise',
-      fd:'Series A expected Q4 2026. Outreach date: Jul 2026.',
-      str:5, sl:'Very Strong — highest Attio connection in Tier 1',
-      aid:'c1f4790d'
-    },
-    {
-      id:'sandra-ai', tier:1, q:'q4-2026', raising:false, dc:true,
-      name:'Sandra AI',
-      sector:'Automotive AI · YC', sb:'bg-blue-900', st:'text-blue-300',
-      stage:'Seed ($1.5M, Dec 2024)', nr:'Series A', nrd:'Q4 2026',
-      desc:'AI receptionists and sales agents for car dealerships · YC-backed',
-      lc:'Mar 23, 2026', ct:'In-person lunch',
-      narr:'Jon and Troy had an in-person lunch with the CEO (Badr El Idrissi) in March 2026, at which point the seed round had just closed. The team is warm with both founders. YC-backed with a direct dealership use case well aligned to TFG\'s portfolio.',
-      na:'Re-engage ahead of Q4 Series A — confirm timeline and discuss TFGI participation',
-      fd:'Series A expected Q4 2026. Outreach date: Sep 2026.',
-      str:3, sl:'Good — warm founder relationship, in-person meeting done',
-      aid:'811ad210'
-    },
-    {
-      id:'tem', tier:1, q:'q3-2027', raising:false, dc:true,
-      name:'tem.',
-      sector:'CleanTech · Energy', sb:'bg-emerald-900', st:'text-emerald-300',
-      stage:'Series B ($75M, Jan 2026)', nr:'Series C', nrd:'Q3 2027',
-      desc:'Renewable energy procurement SaaS — direct PPAs · 1,500 customers',
-      lc:'May 28, 2026', ct:'Meeting — calendar interaction',
-      narr:'tem. closed a $75M Series B led by Atomico in January 2026. TFGI has a strong Attio connection and had a calendar meeting as recently as May 28. The business has 1,500 customers and has saved £20M in transaction costs. Strong growth signals.',
-      na:'Maintain relationship ahead of Series C — explore co-invest or secondary opportunity via the Atomico network',
-      fd:'Series C expected Q3 2027. Outreach date: Apr 2027.',
-      str:4, sl:'Strong — top Attio connection, recently active',
-      aid:'c135ff09'
-    },
-    {
-      id:'opus-training', tier:1, q:'q3-2027', raising:false, dc:true,
-      name:'Opus Training',
-      sector:'Enterprise SaaS', sb:'bg-purple-900', st:'text-purple-300',
-      stage:'Series B ($9M, Feb 2026)', nr:'Series C', nrd:'Q3 2027',
-      desc:'Mobile-first training platform for frontline hospitality and retail workers',
-      lc:'Apr 17, 2026', ct:'Attio interaction',
-      narr:'Strong ongoing relationship. Series B closed February 2026. Highly relevant to TFG hospitality and retail operating companies where frontline training is a recurring operational pain point.',
-      na:'Stay close — explore TFG operating company pilots. Re-engage ahead of Series C',
-      fd:'Series C expected Q3 2027. Outreach date: Apr 2027.',
-      str:4, sl:'Strong — active connection, high strategic fit',
-      aid:'470655b0'
-    },
-    {
-      id:'ameba', tier:1, q:'q1-2027', raising:false, dc:false,
-      name:'Ameba',
-      sector:'Supply Chain AI', sb:'bg-orange-900', st:'text-orange-300',
-      stage:'Seed ($7.1M, Oct 2024)', nr:'Series A', nrd:'Q1 2027',
-      desc:'AI supply chain visibility platform for fashion and apparel brands',
-      lc:'May 6, 2026', ct:'Email — outreach ongoing',
-      narr:'TFGI has made 4+ outreach attempts with limited response. Despite the cold reception, conviction in the business remains high. A warm introduction path needs to be identified.',
-      na:'Find a warm introduction path via the investor network — cold outreach has not been working',
-      fd:'Series A expected Q1 2027. Outreach date: Oct 2026.',
-      str:1, sl:'Very Weak — 4 outreach attempts, limited response',
-      aid:'89445a7c'
-    },
-    {
-      id:'pitpro', tier:1, q:'tbd', raising:false, dc:false,
-      name:'PitPro Automation',
-      sector:'Fleet · Robotics', sb:'bg-slate-700', st:'text-slate-300',
-      stage:'Pre-funded', nr:'Seed', nrd:'TBD',
-      desc:'Automated tire service robots for fleet operators · San Francisco',
-      lc:'May 14, 2026', ct:'Meeting',
-      narr:'Strong Attio connection built since first contact in March 2026. Pre-funded at this stage, exploring seed round options. Automated tire service is directly relevant to TFG fleet and automotive service businesses.',
-      na:'Determine seed timing and appetite for early-stage robotics — assess strategic fit with TFG fleet operations',
-      fd:'Pre-funded. Seed timing TBD. Strategic investment or partnership possible.',
-      str:4, sl:'Strong — consistent meetings, high strategic relevance',
-      aid:'c8ee4667'
-    },
-    {
-      id:'somana', tier:1, q:'tbd', raising:false, dc:true,
-      name:'Somana',
-      sector:'AI · Machine Vision', sb:'bg-violet-900', st:'text-violet-300',
-      stage:'Stealth / Pre-Seed', nr:'Seed', nrd:'TBD',
-      desc:'Machine vision AI · Stealth · New York City · POC deployed with TFG',
-      lc:'Jun 4, 2026', ct:'Email — ongoing thread',
-      narr:'Jon Goh was "very impressed with their capability, speed and agility." Two machine vision systems have been deployed as a live POC. The founders were invited to TFGI\'s MLB/250th America gala dinner in May.',
-      na:'Confirm gala dinner follow-up — maintain warmth and track seed raise timing as they emerge from stealth',
-      fd:'No public raise yet — stealth stage. POC already live with TFG.',
-      str:2, sl:'Weak in Attio — operationally very warm, POC deployed',
-      aid:'3a12b12d'
-    },
-    // ── Tier 2 ──────────────────────────────────────────────
-    {
-      id:'rynse', tier:2, q:'q3-2026', raising:true, dc:false,
-      name:'Rynse',
-      sector:'Fleet SaaS', sb:'bg-blue-900', st:'text-blue-300',
-      stage:'Seed ($5M, Jan 2025)', nr:'Series A', nrd:'Q3 2026',
-      desc:'Fleet vehicle care and wash management SaaS platform',
-      lc:'May 1, 2026', ct:'Email — follow-up sent',
-      narr:'Troy sent a follow-up on May 1 noting "Things are going well at Rynse." Outreach was confirmed done in April 24 tracking. Series A is approaching — Q3 2026.',
-      na:'Confirm Series A is opening and request a call to assess TFGI participation',
-      fd:'Series A expected Q3 2026. Outreach date: Aug 2026.',
-      str:2, sl:'Weak — light relationship, consistent tracking',
-      aid:'6132faa2'
-    },
-    {
-      id:'infinitform', tier:2, q:'q3-2026', raising:true, dc:false,
-      name:'infinitform',
-      sector:'Manufacturing AI', sb:'bg-teal-900', st:'text-teal-300',
-      stage:'Seed ($12.7M, May 2025)', nr:'Series A', nrd:'Q3 2026',
-      desc:'Generative AI platform for CAD design optimisation',
-      lc:'Apr 23, 2026', ct:'Email — via Root.VC investor',
-      narr:'Deep diligence conducted via Root.VC investor Kane. Key concern raised: Anthropic x Autodesk MCP integration was flagged as a competitive risk to infinitform\'s core proposition. Troy exchanged views on buyer profile and competitive risk.',
-      na:'Resolve the Anthropic/Autodesk competitive risk question before making a Series A decision',
-      fd:'Series A expected Q3 2026. Outreach date: May 2026 — check current status.',
-      str:2, sl:'Weak direct — diligence conducted via investor intermediary',
-      aid:'40e7d7fc'
-    },
-    {
-      id:'parallel-systems', tier:2, q:'q4-2026', raising:false, dc:false,
-      name:'Parallel Systems',
-      sector:'Mobility', sb:'bg-sky-900', st:'text-sky-300',
-      stage:'Series B ($38M, Apr 2025)', nr:'Series C', nrd:'Q4 2026',
-      desc:'Autonomous electric rail cargo vehicles for freight networks',
-      lc:'Apr 23, 2026', ct:'Attio interaction',
-      narr:'Introduced to TFGI via an external party in March 2026. TFGI responded they were "researching" but had nothing immediately actionable at the time. Good Attio connection maintained since introduction.',
-      na:'Re-engage ahead of Series C — position around TFG logistics and rail infrastructure interests',
-      fd:'Series C expected Q4 2026. Outreach date: Jul 2026.',
-      str:3, sl:'Good — introduced, active tracking maintained',
-      aid:'7dc8d213'
-    },
-    {
-      id:'dataplor', tier:2, q:'q4-2026', raising:false, dc:true,
-      name:'Dataplor',
-      sector:'Data · Analytics', sb:'bg-cyan-900', st:'text-cyan-300',
-      stage:'Series B ($20.5M, Jun 2025)', nr:'Series C', nrd:'Q4 2026',
-      desc:'Global point-of-interest and location intelligence platform',
-      lc:'May 7, 2026', ct:'Email and calendar — direct CEO contact',
-      narr:'Multiple direct email exchanges with the CEO (Geoff Michener) in May 2026. TFGI noted internally it\'s an "incredible information source but harder to find end-use applications." Flagged alongside GenLogs as needing a clearer value thesis for TFG before committing.',
-      na:'Define a specific TFG use case before the Series C — nail the value thesis first',
-      fd:'Series C expected Q4 2026. Outreach date: Sep 2026.',
-      str:3, sl:'Good — strong CEO relationship, use-case clarity needed',
-      aid:'8e316b01'
-    },
-    {
-      id:'volteras', tier:2, q:'q4-2026', raising:false, dc:false,
-      name:'Volteras',
-      sector:'EV Tech', sb:'bg-emerald-900', st:'text-emerald-300',
-      stage:'Series A (~$14.6M, Apr 2025)', nr:'Series B', nrd:'Q4 2026',
-      desc:'EV vehicle telemetry and data connectivity platform',
-      lc:'May 21, 2026', ct:'Calendar interaction',
-      narr:'Attio tasks reference "chasing Jess" with limited response. Calendar interaction as recently as May 19. Relationship is thin despite recent activity. Series B expected Q4 2026.',
-      na:'Escalate beyond current contact — find a direct path to the founder or another exec ahead of Series B',
-      fd:'Series B expected Q4 2026. Outreach date: Jul 2026.',
-      str:2, sl:'Weak — outreach not converting, need a new angle',
-      aid:'d8682bdd'
-    },
-    {
-      id:'nevoya', tier:2, q:'q4-2026', raising:false, dc:false,
-      name:'Nevoya',
-      sector:'CleanTech · Freight', sb:'bg-emerald-900', st:'text-emerald-300',
-      stage:'Seed ($9.3M, Jul 2025)', nr:'Series A', nrd:'Q4 2026',
-      desc:'All-electric truckload carrier disrupting long-haul freight',
-      lc:'Feb 2026', ct:'Email — NeverLift network intro',
-      narr:'Introduced via the NeverLift network in February 2026. Listed in Troy\'s outreach tracking. The connection is early-stage and has not deepened significantly since the introduction.',
-      na:'Re-engage and build the relationship before Q4 round opens — the intro has gone cold',
-      fd:'Series A expected Q4 2026. Outreach date: Jul 2026.',
-      str:2, sl:'Weak — intro done, relationship not yet warm',
-      aid:'28811abc'
-    },
-    {
-      id:'matta', tier:2, q:'q4-2026', raising:false, dc:false,
-      name:'Matta',
-      sector:'Manufacturing AI', sb:'bg-teal-900', st:'text-teal-300',
-      stage:'Seed ($14M, Dec 2025)', nr:'Series A', nrd:'Q4 2026',
-      desc:'Industrial AI and manufacturing operating system',
-      lc:'May 7, 2026', ct:'Email — outreach drafted via Giant Ventures',
-      narr:'Troy drafted an outreach to Cameron McLain at Giant Ventures seeking an introduction to the Matta team. Charlie Daniel responded positively. No direct company contact has been confirmed yet.',
-      na:'Chase Cameron McLain at Giant Ventures for the Matta intro — arrange a first meeting',
-      fd:'Series A expected Q4 2026. Outreach date: Sep 2026.',
-      str:1, sl:'No direct relationship — intro path identified only',
-      aid:'d53e2f51'
-    },
-    {
-      id:'sourgum', tier:2, q:'q1-2027', raising:false, dc:false,
-      name:'Sourgum Waste',
-      sector:'CleanTech', sb:'bg-emerald-900', st:'text-emerald-300',
-      stage:'Series A ($12.5M, Apr 2025)', nr:'Series B', nrd:'Q1 2027',
-      desc:'Smart waste management and commercial recycling platform',
-      lc:'Apr 26, 2026', ct:'Meeting — calendar interaction Apr 16',
-      narr:'First contact April 2026 with a calendar interaction on April 16. A good connection has been established quickly. Relevant to TFG\'s operational real estate and commercial property portfolio.',
-      na:'Stay warm — re-engage Q4 2026 ahead of Series B. Explore TFG property and FM applications',
-      fd:'Series B expected Q1 2027. Outreach date: Oct 2026.',
-      str:3, sl:'Good — fast relationship build since April',
-      aid:'d2a59bad'
-    },
-    {
-      id:'qargo', tier:2, q:'q3-2027', raising:false, dc:false,
-      name:'Qargo TMS',
-      sector:'Logistics SaaS', sb:'bg-amber-900', st:'text-amber-300',
-      stage:'Series B ($33M, Dec 2025)', nr:'Series C', nrd:'Q3 2027',
-      desc:'Cloud-native transport management system for European logistics operators',
-      lc:'Apr 21, 2026', ct:'Attio interaction',
-      narr:'Active tracking since October 2025. Good Attio connection strength. Series B closed December 2025. Strong TMS product with European market focus.',
-      na:'Maintain relationship — re-engage Q1 2027 (three months before Series C)',
-      fd:'Series C expected Q3 2027. Outreach date: Mar 2027.',
-      str:3, sl:'Good — consistent engagement, Series B recently closed',
-      aid:'6068035f'
-    },
-    {
-      id:'rebar', tier:2, q:'q3-2027', raising:false, dc:false,
-      name:'Rebar',
-      sector:'Construction AI', sb:'bg-violet-900', st:'text-violet-300',
-      stage:'Series A ($14M, Mar 2026)', nr:'Series B', nrd:'Q3 2027',
-      desc:'AI-powered HVAC takeoffs and estimating for the construction industry',
-      lc:'Unknown', ct:'Pipeline tracking only — no confirmed direct contact',
-      narr:'In the TFGI pipeline for Series B tracking. Series A closed March 2026. Limited context on the depth of existing relationship — needs a direct outreach to establish contact ahead of the Series B cycle.',
-      na:'Initiate first direct outreach — establish a relationship well before Series B opens',
-      fd:'Series B expected Q3 2027. Target outreach: Sep 2026.',
-      str:1, sl:'Unknown — pipeline only, no confirmed interaction',
-      aid:'1fe0a858'
-    },
-    {
-      id:'overland-ai', tier:2, q:'q3-2027', raising:false, dc:false,
-      name:'Overland AI',
-      sector:'Defense Tech', sb:'bg-slate-700', st:'text-slate-300',
-      stage:'Series B ($20M, Feb 2026)', nr:'Series C', nrd:'Q3 2027',
-      desc:'Autonomous ground vehicle software for US military and defense',
-      lc:'Apr 27, 2026 — task overdue', ct:'Attio task assigned — NOT yet actioned',
-      narr:'An Attio task was assigned to Troy on Apr 27 to initiate first outreach. As of last check the task is overdue and no contact has been made. Series B closed February 2026 — the window for Series C relationship-building is open now.',
-      na:'⚠️ OVERDUE — Troy to initiate first outreach to Overland AI immediately',
-      fd:'Series C expected Q3 2027. Series B just closed — act now to build relationship.',
-      str:1, sl:'No contact made — overdue action item',
-      aid:'a00ceda7'
-    },
-    {
-      id:'vermillio', tier:2, q:'q3-2027', raising:false, dc:false,
-      name:'Vermillio',
-      sector:'AI · Media', sb:'bg-violet-900', st:'text-violet-300',
-      stage:'Series A ($16M, Mar 2025)', nr:'Series B', nrd:'Q3 2027',
-      desc:'AI-powered rights management and content licensing platform',
-      lc:'May 21, 2026', ct:'Attio interaction',
-      narr:'One of the longer-running relationships in the pipeline — first contact February 2025. Good Attio connection with a recent interaction in May 2026. Media rights AI is an emerging thesis for TFGI.',
-      na:'Maintain warm relationship — re-engage ahead of Series B in Q3 2027',
-      fd:'Series B expected Q3 2027. Outreach date: Sep 2026.',
-      str:3, sl:'Good — long-running relationship since Feb 2025',
-      aid:'6430b414'
-    },
-    {
-      id:'lace', tier:2, q:'q4-2027', raising:false, dc:false,
-      name:'Lace Lithography',
-      sector:'Deep Tech', sb:'bg-rose-900', st:'text-rose-300',
-      stage:'Series A ($40M, Dec 2025)', nr:'Series B', nrd:'Q4 2027',
-      desc:'Beyond-EUV chip patterning technology · Norway',
-      lc:'Feb 2026', ct:'Research — AlphaSense deep dive commissioned',
-      narr:'TFGI commissioned an AlphaSense deep research in January–February 2026. An Attio task was assigned to "engage with Atomico to validate the commercial setting." Flagged as a "large opportunity with exploding end market."',
-      na:'Initiate contact via Atomico to validate the commercial pathway — no direct company contact made yet',
-      fd:'Series B expected Q4 2027. Research and relationship-building phase.',
-      str:1, sl:'Research phase — no direct company contact yet',
-      aid:'b4067000'
-    },
-    {
-      id:'genlogs', tier:2, q:'q2-2028', raising:false, dc:true,
-      name:'GenLogs',
-      sector:'Logistics', sb:'bg-amber-900', st:'text-amber-300',
-      stage:'Series C (May 2026)', nr:'Series D', nrd:'Q2 2028',
-      desc:'Real-time freight intelligence and logistics data platform',
-      lc:'Apr 15, 2026', ct:'Meeting — CEO attended by Charlie Daniel',
-      narr:'Direct meeting with the CEO (Ryan Joyce) in April 2026, attended by Charlie Daniel. Troy\'s June 4 note described GenLogs as an "incredible information source but more difficult to find end-use applications." A Series B co-invest was flagged as potentially inbound.',
-      na:'Define a specific TFG use case before committing — revisit co-invest opportunity at Series D',
-      fd:'Series D expected Q2 2028. Long time horizon — maintain the relationship.',
-      str:2, sl:'Weak direct — one CEO meeting, use-case clarity needed',
-      aid:'763b16c8'
-    },
+    // ── ACTIVE ─────────────────────────────────────────────
+    {id:'exploration-co',tier:2,q:'active',raising:true,dc:false,
+     name:'The Exploration Company',sector:'Space / Aerospace',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Series B (~$158M, Nov 2024)',nr:'Series C',nrd:'Active Now',
+     desc:'Orbital spacecraft and logistics services for government and commercial clients',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected imminently',
+     fd:'Series C expected Q2 2026. Outreach target: Aug 2026.',str:0,sl:'No contact data',aid:'63cff34b'},
+
+    // ── Q3 2026 ─────────────────────────────────────────────
+    {id:'unitx',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'UnitX',sector:'Robotics AI',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Seed ($2M, Oct 2019)',nr:'Series A',nrd:'Q3 2026',
+     desc:'AI-powered precision inspection and quality control for manufacturing lines',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: Apr 2026.',str:0,sl:'No contact data',aid:'e9c85f7e'},
+
+    {id:'outverse',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Outverse',sector:'Community SaaS',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Seed ($6M, Jul 2023)',nr:'Series A',nrd:'Q3 2026',
+     desc:'Community and support platform built for software companies and gaming studios',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: Apr 2026.',str:0,sl:'No contact data',aid:'931bfea1'},
+
+    {id:'revv',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Revv',sector:'Automotive SaaS',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Series A ($20M, Nov 2024)',nr:'Series B',nrd:'Q3 2026',
+     desc:'F&I and dealership finance software modernisation platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q3 2026',
+     fd:'Series B expected Q3 2026. Target outreach: Apr 2026.',str:0,sl:'No contact data',aid:'87cd7583'},
+
+    {id:'ampup',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'AmpUp',sector:'EV Charging',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q3 2026',
+     desc:'EV charging network management and SaaS for commercial fleets and property owners',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'3ab41824'},
+
+    {id:'cariqa',tier:1,q:'q3-2026',raising:true,dc:false,
+     name:'Cariqa',sector:'EV · CleanTech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Seed (~$4.7M, Jul 2025)',nr:'Series A',nrd:'Q3 2026',
+     desc:'EV charging transaction management SaaS',
+     lc:'Apr 24, 2026',ct:'Attio — ongoing engagement',
+     narr:'Active tracking since September 2025. Strong Attio connection strength signals consistent team engagement. EV charging is directly relevant to TFG fleet operations.',
+     na:'Reach out to confirm Series A timeline and discuss TFGI participation interest',
+     fd:'Series A expected Q3 2026. Outreach date: Jun 2026.',str:4,sl:'Strong — consistent engagement since Sep 2025',aid:'fcf8dc02'},
+
+    {id:'tracksights',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'TrackSights',sector:'Sports AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Seed (~$1M, Feb 2025)',nr:'Series A',nrd:'Q3 2026',
+     desc:'AI video analytics platform for athlete and performance tracking',
+     lc:'—',ct:'Pipeline tracking — reach out again noted',narr:'In TFGI pipeline tracking. Notes indicate "reach out again."',
+     na:'Re-initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'3647e219'},
+
+    {id:'cafler',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Cafler',sector:'Automotive Services',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Series A ($11M, Feb 2025)',nr:'Series B',nrd:'Q3 2026',
+     desc:'On-demand vehicle maintenance, servicing and repair marketplace',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q3 2026',
+     fd:'Series B expected Q3 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'b912fd93'},
+
+    {id:'infinitform',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'infinitform',sector:'Manufacturing AI',sb:'bg-teal-900',st:'text-teal-300',
+     stage:'Seed ($12.7M, May 2025)',nr:'Series A',nrd:'Q3 2026',
+     desc:'Generative AI platform for CAD design optimisation',
+     lc:'Apr 23, 2026',ct:'Email — via Root.VC investor',
+     narr:'Deep diligence conducted via Root.VC investor Kane. Key concern raised: Anthropic x Autodesk MCP integration was flagged as a competitive risk to infinitform\'s core proposition.',
+     na:'Resolve the Anthropic/Autodesk competitive risk question before making a Series A decision',
+     fd:'Series A expected Q3 2026. Outreach date: May 2026.',str:2,sl:'Weak direct — diligence conducted via investor intermediary',aid:'40e7d7fc'},
+
+    {id:'rynse',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Rynse',sector:'Fleet SaaS',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Seed ($5M, Jan 2025)',nr:'Series A',nrd:'Q3 2026',
+     desc:'Fleet vehicle care and wash management SaaS platform',
+     lc:'May 1, 2026',ct:'Email — follow-up sent',
+     narr:'Troy sent a follow-up on May 1 noting "Things are going well at Rynse." Outreach was confirmed done in April 24 tracking. Series A is approaching — Q3 2026.',
+     na:'Confirm Series A is opening and request a call to assess TFGI participation',
+     fd:'Series A expected Q3 2026. Outreach date: Aug 2026.',str:2,sl:'Weak — light relationship, consistent tracking',aid:'6132faa2'},
+
+    {id:'reflek',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'reflek.io',sector:'Revenue Analytics',sb:'bg-cyan-900',st:'text-cyan-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q3 2026',
+     desc:'Revenue analytics and forecasting platform for SaaS businesses',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: Jun 2026.',str:0,sl:'No contact data',aid:'92c6cd8e'},
+
+    {id:'glimpse',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Glimpse',sector:'Consumer Intelligence',sb:'bg-cyan-900',st:'text-cyan-300',
+     stage:'Series A ($10M, Mar 2025)',nr:'Series B',nrd:'Q3 2026',
+     desc:'Consumer trend prediction and market intelligence platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q3 2026',
+     fd:'Series B expected Q3 2026. Target outreach: Jun 2026.',str:0,sl:'No contact data',aid:'e03029c6'},
+
+    {id:'zeromatter',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Zeromatter',sector:'Deep Tech',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Seed (Unknown, Jan 2024)',nr:'Series A',nrd:'Q3 2026',
+     desc:'Advanced materials and engineering for space and high-performance applications',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2026',
+     fd:'Series A expected Q3 2026. Target outreach: May 2026.',str:0,sl:'No contact data',aid:'af5826f4'},
+
+    {id:'vermillio',tier:2,q:'q3-2026',raising:true,dc:false,
+     name:'Vermillio',sector:'AI · Media',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Series A ($16M, Mar 2025)',nr:'Series B',nrd:'Q3 2026',
+     desc:'AI-powered rights management and content licensing platform',
+     lc:'May 21, 2026',ct:'Attio interaction',
+     narr:'One of the longer-running relationships in the pipeline — first contact February 2025. Good Attio connection with a recent interaction in May 2026. Media rights AI is an emerging thesis for TFGI.',
+     na:'Confirm Series B timeline — engage ahead of Q3 2026 raise',
+     fd:'Series B expected Q3 2026. Outreach date: Jun 2026.',str:3,sl:'Good — long-running relationship since Feb 2025',aid:'6430b414'},
+
+    // ── Q4 2026 ─────────────────────────────────────────────
+    {id:'paperless-parts',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Paperless Parts',sector:'Manufacturing SaaS',sb:'bg-teal-900',st:'text-teal-300',
+     stage:'Series B ($5M, Dec 2023)',nr:'Series C',nrd:'Q4 2026',
+     desc:'Quoting and order management software for custom parts manufacturers',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q4 2026',
+     fd:'Series C expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'ce6323a6'},
+
+    {id:'rerun',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Rerun',sector:'Developer Tools',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Series A ($17M, Mar 2025)',nr:'Series B',nrd:'Q4 2026',
+     desc:'Multimodal data visualisation and replay platform for robotics and AI development',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2026',
+     fd:'Series B expected Q4 2026. Target outreach: Aug 2026.',str:0,sl:'No contact data',aid:'635b82b0'},
+
+    {id:'instinct-robotics',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Instinct Robotics',sector:'Robotics',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q4 2026',
+     desc:'Companion robotics for elder care and assisted living facilities',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'aa7a48a1'},
+
+    {id:'dataplor',tier:2,q:'q4-2026',raising:false,dc:true,
+     name:'Dataplor',sector:'Data · Analytics',sb:'bg-cyan-900',st:'text-cyan-300',
+     stage:'Series B ($20.5M, Jun 2025)',nr:'Series C',nrd:'Q4 2026',
+     desc:'Global point-of-interest and location intelligence platform',
+     lc:'May 7, 2026',ct:'Email and calendar — direct CEO contact',
+     narr:'Multiple direct email exchanges with the CEO (Geoff Michener) in May 2026. TFGI noted internally it\'s an "incredible information source but harder to find end-use applications." Flagged as needing a clearer value thesis for TFG before committing.',
+     na:'Define a specific TFG use case before the Series C — nail the value thesis first',
+     fd:'Series C expected Q4 2026. Outreach date: Sep 2026.',str:3,sl:'Good — strong CEO relationship, use-case clarity needed',aid:'8e316b01'},
+
+    {id:'flai',tier:1,q:'q4-2026',raising:false,dc:false,
+     name:'Flai',sector:'Automotive AI',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Seed ($4.5M, Oct 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'AI virtual assistant and digital tools for car dealerships',
+     lc:'Apr 6, 2026',ct:'Meeting — internal POC evaluation',
+     narr:'TFGI was evaluating Flai alongside Mia for a dealership AI POC. Jon Goh mapped "where value/defensibility accrues across 5 major players." Flai appeared at the Toyota Startup Summit (Mar 30), which TFGI flagged as a strong validator.',
+     na:'Conclude POC evaluation and make a Series A participation decision ahead of Q4 raise',
+     fd:'Series A expected Q4 2026. Outreach date: Jul 2026.',str:5,sl:'Very Strong — highest Attio connection in Tier 1',aid:'c1f4790d'},
+
+    {id:'parallel-systems',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Parallel Systems',sector:'Mobility',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Series B ($38M, Apr 2025)',nr:'Series C',nrd:'Q4 2026',
+     desc:'Autonomous electric rail cargo vehicles for freight networks',
+     lc:'Apr 23, 2026',ct:'Attio interaction',
+     narr:'Introduced to TFGI via an external party in March 2026. TFGI responded they were "researching" but had nothing immediately actionable at the time. Good Attio connection maintained since introduction.',
+     na:'Re-engage ahead of Series C — position around TFG logistics and rail infrastructure interests',
+     fd:'Series C expected Q4 2026. Outreach date: Jul 2026.',str:3,sl:'Good — introduced, active tracking maintained',aid:'7dc8d213'},
+
+    {id:'nevoya',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Nevoya',sector:'CleanTech · Freight',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Seed ($9.3M, Jul 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'All-electric truckload carrier disrupting long-haul freight',
+     lc:'Feb 2026',ct:'Email — NeverLift network intro',
+     narr:'Introduced via the NeverLift network in February 2026. The connection is early-stage and has not deepened significantly since the introduction.',
+     na:'Re-engage and build the relationship before Q4 round opens — the intro has gone cold',
+     fd:'Series A expected Q4 2026. Outreach date: Jul 2026.',str:2,sl:'Weak — intro done, relationship not yet warm',aid:'28811abc'},
+
+    {id:'shinkei',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Shinkei Systems',sector:'AgriTech / FoodTech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Series A ($22M, Jun 2025)',nr:'Series B',nrd:'Q4 2026',
+     desc:'Humane precision stunning technology improving fish welfare and product quality',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2026',
+     fd:'Series B expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'00864bb5'},
+
+    {id:'productive-machines',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Productive Machines',sector:'Manufacturing AI',sb:'bg-teal-900',st:'text-teal-300',
+     stage:'Seed (~$0.7M, Jul 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'AI optimisation software for CNC machining — cuts cycle times and tool wear',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'07a528c0'},
+
+    {id:'volteras',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Volteras',sector:'EV Tech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Series A (~$14.6M, Apr 2025)',nr:'Series B',nrd:'Q4 2026',
+     desc:'EV vehicle telemetry and data connectivity platform',
+     lc:'May 21, 2026',ct:'Calendar interaction',
+     narr:'Attio tasks reference "chasing Jess" with limited response. Calendar interaction as recently as May 19. Relationship is thin despite recent activity.',
+     na:'Escalate beyond current contact — find a direct path to the founder ahead of Series B',
+     fd:'Series B expected Q4 2026. Outreach date: Jul 2026.',str:2,sl:'Weak — outreach not converting, need a new angle',aid:'d8682bdd'},
+
+    {id:'bahn-express',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Bahn Express',sector:'Logistics Tech',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Seed (~$5.9M, Dec 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'Digital rail freight forwarding and logistics platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'5f6ed7b6'},
+
+    {id:'gaia-dynamics',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Gaia Dynamics',sector:'AgriTech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Seed ($1.5M, Feb 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'Precision agriculture AI platform for soil health and crop yield optimisation',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'e5bee808'},
+
+    {id:'matta',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Matta',sector:'Manufacturing AI',sb:'bg-teal-900',st:'text-teal-300',
+     stage:'Seed ($14M, Dec 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'Industrial AI and manufacturing operating system',
+     lc:'May 7, 2026',ct:'Email — outreach drafted via Giant Ventures',
+     narr:'Troy drafted an outreach to Cameron McLain at Giant Ventures seeking an introduction to the Matta team. Charlie Daniel responded positively. No direct company contact has been confirmed yet.',
+     na:'Chase Cameron McLain at Giant Ventures for the Matta intro — arrange a first meeting',
+     fd:'Series A expected Q4 2026. Outreach date: Sep 2026.',str:1,sl:'No direct relationship — intro path identified only',aid:'d53e2f51'},
+
+    {id:'fuelup',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'FuelUp',sector:'Fleet / Energy',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Seed ($2.3M, Oct 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'Fuel management and cost optimisation platform for commercial fleets',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'cb446c6c'},
+
+    {id:'crescendo',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Crescendo',sector:'Revenue AI',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series C ($50M, Oct 2024)',nr:'Series D',nrd:'Q4 2026',
+     desc:'AI-powered customer success and revenue retention platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series D expected Q4 2026',
+     fd:'Series D expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'28098699'},
+
+    {id:'zeus',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Zeus',sector:'FinTech',sb:'bg-indigo-900',st:'text-indigo-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q4 2026',
+     desc:'Instant settlement and payment infrastructure for businesses',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'eb22ea83'},
+
+    {id:'levelpath',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Levelpath',sector:'Procurement SaaS',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series B ($55M, Jun 2025)',nr:'Series C',nrd:'Q4 2026',
+     desc:'Intelligent procurement and supplier management platform for enterprise',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q4 2026',
+     fd:'Series C expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'655d0713'},
+
+    {id:'frontier-audio',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Frontier Audio',sector:'Audio AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q4 2026',
+     desc:'AI audio enhancement and spatial sound technology',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'1f2f4c6b'},
+
+    {id:'sourgum',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Sourgum Waste',sector:'CleanTech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Series A ($12.5M, Apr 2025)',nr:'Series B',nrd:'Q4 2026',
+     desc:'Smart waste management and commercial recycling platform',
+     lc:'Apr 26, 2026',ct:'Meeting — calendar interaction Apr 16',
+     narr:'First contact April 2026 with a calendar interaction on April 16. A good connection has been established quickly. Relevant to TFG\'s operational real estate and commercial property portfolio.',
+     na:'Stay warm — re-engage ahead of Series B. Explore TFG property and FM applications',
+     fd:'Series B expected Q4 2026. Outreach date: Jul 2026.',str:3,sl:'Good — fast relationship build since April',aid:'d2a59bad'},
+
+    {id:'logrock',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'LogRock',sector:'Construction Tech',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Series A ($8M, Apr 2025)',nr:'Series B',nrd:'Q4 2026',
+     desc:'Safety, compliance and incident-logging platform for construction sites',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2026',
+     fd:'Series B expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'a98554e5'},
+
+    {id:'monta',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Monta',sector:'EV Charging',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Series B (~$87M, Jan 2024)',nr:'Series C',nrd:'Q4 2026',
+     desc:'EV charging management platform for operators, fleets and drivers · Europe',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q4 2026',
+     fd:'Series C expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'d4ca317d'},
+
+    {id:'toma-research',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'TOMA Research',sector:'AI Research',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q4 2026',
+     desc:'Applied AI research commercialisation platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'fe5e86f5'},
+
+    {id:'atomic',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Atomic',sector:'FinTech',sb:'bg-indigo-900',st:'text-indigo-300',
+     stage:'Seed ($3M, Apr 2025)',nr:'Series A',nrd:'Q4 2026',
+     desc:'Neobank and financial infrastructure for embedded finance products',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2026',
+     fd:'Series A expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'7048f9ee'},
+
+    {id:'vooma',tier:2,q:'q4-2026',raising:false,dc:false,
+     name:'Vooma',sector:'Logistics AI',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Series A (~$14M, Dec 2024)',nr:'Series B',nrd:'Q4 2026',
+     desc:'AI freight quoting, pricing and load management for brokers and carriers',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2026',
+     fd:'Series B expected Q4 2026. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'a1abe90e'},
+
+    // ── Q1 2027 ─────────────────────────────────────────────
+    {id:'cogna',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Cogna',sector:'EdTech AI',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series A (~$16M, Nov 2024)',nr:'Series B',nrd:'Q1 2027',
+     desc:'AI-powered personalised tutoring and learning platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q1 2027',
+     fd:'Series B expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'10c78495'},
+
+    {id:'ami-labs',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'AMI Labs',sector:'AI Research',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'Applied machine intelligence research lab and commercialisation platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Dec 2026.',str:0,sl:'No contact data',aid:'7146c2d2'},
+
+    {id:'modem',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Modem (Stealth)',sector:'Communications Tech',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Seed ($4.4M, Feb 2026)',nr:'Series A',nrd:'Q1 2027',
+     desc:'Stealth-stage next-generation communications infrastructure',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'b0b77784'},
+
+    {id:'polymath',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Polymath',sector:'AI Platform',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'No-code AI model deployment and MLOps platform for enterprise teams',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Dec 2026.',str:0,sl:'No contact data',aid:'ba0ce7ea'},
+
+    {id:'apex-ai',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Apex.AI',sector:'Autonomous Vehicles',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Series C (Unknown, Feb 2025)',nr:'Series D',nrd:'Q1 2027',
+     desc:'Safety-certified autonomous vehicle and robotics software stack (ROS2-based)',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series D expected Q1 2027',
+     fd:'Series D expected Q1 2027. Target outreach: Nov 2026.',str:0,sl:'No contact data',aid:'5151fedf'},
+
+    {id:'aerolane',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Aerolane',sector:'Aviation Tech',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Series A ($9.5M, Oct 2024)',nr:'Series B',nrd:'Q1 2027',
+     desc:'AI-powered airport ground operations optimisation and turnaround management',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q1 2027',
+     fd:'Series B expected Q1 2027. Target outreach: Nov 2026.',str:0,sl:'No contact data',aid:'2de82c26'},
+
+    {id:'telegraph',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Telegraph',sector:'Communications AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Series A (Unknown, Dec 2024)',nr:'Series B',nrd:'Q1 2027',
+     desc:'AI-native communications and workflow automation platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q1 2027',
+     fd:'Series B expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'12a28168'},
+
+    {id:'quest-mobility',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'QUEST MOBILITY',sector:'EV Mobility',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'Electric mobility solutions and fleet electrification platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'2e122a28'},
+
+    {id:'ordio',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Ordio',sector:'Hospitality SaaS',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series A (~$14M, Jul 2025)',nr:'Series B',nrd:'Q1 2027', // wait, spreadsheet says series A. Let me check... Ordio last raise Series A ~$14M Jul 2025. Next B in 18 months = 2027-01. Series B Q1 2027. Correct.
+     desc:'Workforce scheduling and team management platform for hospitality operators',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q1 2027',
+     fd:'Series B expected Q1 2027. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'3dfff8f2'},
+
+    {id:'ameba',tier:1,q:'q1-2027',raising:false,dc:false,
+     name:'Ameba',sector:'Supply Chain AI',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Seed ($7.1M, Oct 2024)',nr:'Series A',nrd:'Q1 2027',
+     desc:'AI supply chain visibility platform for fashion and apparel brands',
+     lc:'May 6, 2026',ct:'Email — outreach ongoing',
+     narr:'TFGI has made 4+ outreach attempts with limited response. Despite the cold reception, conviction in the business remains high. A warm introduction path needs to be identified.',
+     na:'Find a warm introduction path via the investor network — cold outreach has not been working',
+     fd:'Series A expected Q1 2027. Outreach date: Oct 2026.',str:1,sl:'Very Weak — 4 outreach attempts, limited response',aid:'89445a7c'},
+
+    {id:'frontier-machines',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Frontier Machines',sector:'Construction Robotics',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'Autonomous machinery and robotics for heavy construction applications',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'b4720fab'},
+
+    {id:'beyondmath',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'BeyondMath',sector:'EdTech AI',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Seed ($10M, Feb 2026)',nr:'Series A',nrd:'Q1 2027',
+     desc:'AI-powered adaptive maths tutoring platform for K-12 students',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Aug 2026.',str:0,sl:'No contact data',aid:'4096886a'},
+
+    {id:'jigso',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Jigso',sector:'Enterprise AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Seed ($7.5M, Mar 2023)',nr:'Series A',nrd:'Q1 2027',
+     desc:'AI-powered workplace assistant that monitors tools and surfaces critical alerts',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'522ecf0c'},
+
+    {id:'isee',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'ISEE',sector:'Autonomous Vehicles',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Series B ($40M, Nov 2022)',nr:'Series C',nrd:'Q1 2027',
+     desc:'Autonomous yard truck software for logistics and distribution centres',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q1 2027',
+     fd:'Series C expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'de701b8b'},
+
+    {id:'asylon',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Asylon',sector:'Security Robotics',sb:'bg-rose-900',st:'text-rose-300',
+     stage:'Series B ($24M, Jul 2025)',nr:'Series C',nrd:'Q1 2027',
+     desc:'Autonomous drone-in-a-box security systems for perimeter surveillance',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q1 2027',
+     fd:'Series C expected Q1 2027. Target outreach: Sep 2026.',str:0,sl:'No contact data',aid:'0ed2f32e'},
+
+    {id:'22one',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'22one',sector:'Sports Fan Tech',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'Fan engagement and sports loyalty platform for clubs and leagues',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Nov 2026.',str:0,sl:'No contact data',aid:'9e495686'},
+
+    {id:'airgarage',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'AirGarage',sector:'Parking Tech',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Series B ($23M, Jul 2025)',nr:'Series C',nrd:'Q1 2027',
+     desc:'Parking lot management and monetisation SaaS for property owners',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q1 2027',
+     fd:'Series C expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'338556a2'},
+
+    {id:'pitpro',tier:1,q:'q1-2027',raising:false,dc:false,
+     name:'PitPro Automation',sector:'Fleet · Robotics',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Pre-funded',nr:'Series A',nrd:'Q1 2027',
+     desc:'Automated tire service robots for fleet operators · San Francisco',
+     lc:'May 14, 2026',ct:'Meeting',
+     narr:'Strong Attio connection built since first contact in March 2026. Pre-funded at this stage, exploring seed round options. Automated tire service is directly relevant to TFG fleet and automotive service businesses.',
+     na:'Determine seed timing and appetite for early-stage robotics — assess strategic fit with TFG fleet operations',
+     fd:'Series A expected Q1 2027. Strategic investment or partnership possible.',str:4,sl:'Strong — consistent meetings, high strategic relevance',aid:'91428ee8'},
+
+    {id:'mundostra',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Mundostra',sector:'Construction Tech',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'Digital construction management and project delivery platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'0515b559'},
+
+    {id:'primitive-instruments',tier:2,q:'q1-2027',raising:false,dc:false,
+     name:'Primitive Instruments',sector:'Music Tech',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q1 2027',
+     desc:'AI-powered music instruments and creative tools for producers',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q1 2027',
+     fd:'Series A expected Q1 2027. Target outreach: Oct 2026.',str:0,sl:'No contact data',aid:'b0da7717'},
+
+    // ── Q2 2027 ─────────────────────────────────────────────
+    {id:'proaction',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'Proaction',sector:'Fleet Maintenance',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Pre-Seed ($0.65M, Oct 2024)',nr:'Series A',nrd:'Q2 2027',
+     desc:'Predictive maintenance and compliance platform for commercial vehicle fleets',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q2 2027',
+     fd:'Series A expected Q2 2027. Target outreach: Mar 2027.',str:0,sl:'No contact data',aid:'4a4cafa2'},
+
+    {id:'freight-hero',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'Freight Hero',sector:'Logistics',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Seed (Unknown, Jan 2025)',nr:'Series A',nrd:'Q2 2027',
+     desc:'Digital freight brokerage and load matching platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q2 2027',
+     fd:'Series A expected Q2 2027. Target outreach: Mar 2027.',str:0,sl:'No contact data',aid:'aa6bbe42'},
+
+    {id:'qargo',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'Qargo TMS',sector:'Logistics SaaS',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Series B ($33M, Dec 2025)',nr:'Series C',nrd:'Q2 2027',
+     desc:'Cloud-native transport management system for European logistics operators',
+     lc:'Apr 21, 2026',ct:'Attio interaction',
+     narr:'Active tracking since October 2025. Good Attio connection strength. Series B closed December 2025. Strong TMS product with European market focus.',
+     na:'Maintain relationship — re-engage Q1 2027 (three months before Series C)',
+     fd:'Series C expected Q2 2027. Outreach date: Mar 2027.',str:3,sl:'Good — consistent engagement, Series B recently closed',aid:'6068035f'},
+
+    {id:'jigcar',tier:1,q:'q2-2027',raising:false,dc:true,
+     name:'Jigcar',sector:'Automotive',sb:'bg-sky-900',st:'text-sky-300',
+     stage:'Seed ($5M, Sep 2025)',nr:'Series A',nrd:'Q2 2027',
+     desc:'AI vehicle transport optimisation for dealer groups · London',
+     lc:'May 16, 2026',ct:'Email — direct founder thread',
+     narr:'Troy introduced the CEO (Elliott Perks) to Robert Tang at TFG to explore applying Jigcar\'s platform to US dealer car-movement flows. Active conversation around a potential BD arrangement or POC. The product demonstrates a 10% reduction in transport spend and 2-day reduction in days-to-sell.',
+     na:'Follow up on the Robert Tang conversation — confirm Series A timing and TFGI participation',
+     fd:'Series A expected Q2 2027. Outreach date: Mar 2027.',str:3,sl:'Good — direct founder relationship established',aid:'428b0773'},
+
+    {id:'integrals-power',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'Integrals Power',sector:'CleanTech',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Seed (Unknown, Apr 2026)',nr:'Series A',nrd:'Q2 2027',
+     desc:'Next-generation power conversion and energy storage technology',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q2 2027',
+     fd:'Series A expected Q2 2027. Target outreach: Jan 2027.',str:0,sl:'No contact data',aid:'72086999'},
+
+    {id:'genz-auto',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'GenZ Auto',sector:'Automotive AI',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q2 2027',
+     desc:'Automotive marketplace and car buying platform designed for Gen Z consumers',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q2 2027',
+     fd:'Series A expected Q2 2027. Target outreach: Mar 2027.',str:0,sl:'No contact data',aid:'d5b0ab76'},
+
+    {id:'lace',tier:2,q:'q2-2027',raising:false,dc:false,
+     name:'Lace Lithography',sector:'Deep Tech',sb:'bg-rose-900',st:'text-rose-300',
+     stage:'Series A ($40M, Dec 2025)',nr:'Series B',nrd:'Q2 2027',
+     desc:'Beyond-EUV chip patterning technology · Norway',
+     lc:'Feb 2026',ct:'Research — AlphaSense deep dive commissioned',
+     narr:'TFGI commissioned an AlphaSense deep research in January–February 2026. An Attio task was assigned to "engage with Atomico to validate the commercial setting." Flagged as a "large opportunity with exploding end market."',
+     na:'Initiate contact via Atomico to validate the commercial pathway — no direct company contact made yet',
+     fd:'Series B expected Q2 2027. Research and relationship-building phase.',str:1,sl:'Research phase — no direct company contact yet',aid:'b4067000'},
+
+    // ── Q3 2027 ─────────────────────────────────────────────
+    {id:'circuit',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Circuit',sector:'Logistics Robotics',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Series A ($30M, Feb 2026)',nr:'Series B',nrd:'Q3 2027',
+     desc:'Autonomous last-mile delivery and route optimisation platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q3 2027',
+     fd:'Series B expected Q3 2027. Target outreach: May 2027.',str:0,sl:'No contact data',aid:'1dbc6be0'},
+
+    {id:'isembard',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Isembard',sector:'Deep Tech',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Series A ($50M, Mar 2026)',nr:'Series B',nrd:'Q3 2027',
+     desc:'Advanced engineering and deep technology infrastructure company',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q3 2027',
+     fd:'Series B expected Q3 2027. Target outreach: Jun 2027.',str:0,sl:'No contact data',aid:'3712e2ea'},
+
+    {id:'aikido',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Aikido Security',sector:'Cybersecurity',sb:'bg-rose-900',st:'text-rose-300',
+     stage:'Series B ($60M, Jan 2026)',nr:'Series C',nrd:'Q3 2027',
+     desc:'AI-powered developer-first security platform for code and cloud environments',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q3 2027',
+     fd:'Series C expected Q3 2027. Target outreach: Jul 2026.',str:0,sl:'No contact data',aid:'4a69f01b'},
+
+    {id:'intropy-ai',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Intropy AI',sector:'Enterprise AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q3 2027',
+     desc:'AI knowledge management and enterprise intelligence platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q3 2027',
+     fd:'Series A expected Q3 2027. Target outreach: May 2027.',str:0,sl:'No contact data',aid:'f0e7690e'},
+
+    {id:'overland-ai',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Overland AI',sector:'Defense Tech',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Series B ($20M, Feb 2026)',nr:'Series C',nrd:'Q3 2027',
+     desc:'Autonomous ground vehicle software for US military and defense',
+     lc:'Apr 27, 2026 — task overdue',ct:'Attio task assigned — NOT yet actioned',
+     narr:'An Attio task was assigned to Troy on Apr 27 to initiate first outreach. As of last check the task is overdue and no contact has been made. Series B closed February 2026 — the window for Series C relationship-building is open now.',
+     na:'⚠️ OVERDUE — Troy to initiate first outreach to Overland AI immediately',
+     fd:'Series C expected Q3 2027. Series B just closed — act now to build relationship.',str:1,sl:'No contact made — overdue action item',aid:'a00ceda7'},
+
+    {id:'rebar',tier:2,q:'q3-2027',raising:false,dc:false,
+     name:'Rebar',sector:'Construction AI',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Series A ($14M, Mar 2026)',nr:'Series B',nrd:'Q3 2027',
+     desc:'AI-powered HVAC takeoffs and estimating for the construction industry',
+     lc:'Unknown',ct:'Pipeline tracking only — no confirmed direct contact',
+     narr:'In the TFGI pipeline for Series B tracking. Series A closed March 2026. Limited context on the depth of existing relationship.',
+     na:'Initiate first direct outreach — establish a relationship well before Series B opens',
+     fd:'Series B expected Q3 2027. Target outreach: Sep 2026.',str:1,sl:'Unknown — pipeline only, no confirmed interaction',aid:'1fe0a858'},
+
+    {id:'tem',tier:1,q:'q3-2027',raising:false,dc:true,
+     name:'tem.',sector:'CleanTech · Energy',sb:'bg-emerald-900',st:'text-emerald-300',
+     stage:'Series B ($75M, Jan 2026)',nr:'Series C',nrd:'Q3 2027',
+     desc:'Renewable energy procurement SaaS — direct PPAs · 1,500 customers',
+     lc:'May 28, 2026',ct:'Meeting — calendar interaction',
+     narr:'tem. closed a $75M Series B led by Atomico in January 2026. TFGI has a strong Attio connection and had a calendar meeting as recently as May 28. The business has 1,500 customers and has saved £20M in transaction costs. Strong growth signals.',
+     na:'Maintain relationship ahead of Series C — explore co-invest or secondary opportunity via the Atomico network',
+     fd:'Series C expected Q3 2027. Outreach date: Apr 2027.',str:4,sl:'Strong — top Attio connection, recently active',aid:'c135ff09'},
+
+    {id:'opus-training',tier:1,q:'q3-2027',raising:false,dc:true,
+     name:'Opus Training',sector:'Enterprise SaaS',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series B ($9M, Feb 2026)',nr:'Series C',nrd:'Q3 2027',
+     desc:'Mobile-first training platform for frontline hospitality and retail workers',
+     lc:'Apr 17, 2026',ct:'Attio interaction',
+     narr:'Strong ongoing relationship. Series B closed February 2026. Highly relevant to TFG hospitality and retail operating companies where frontline training is a recurring operational pain point.',
+     na:'Stay close — explore TFG operating company pilots. Re-engage ahead of Series C',
+     fd:'Series C expected Q3 2027. Outreach date: Apr 2027.',str:4,sl:'Strong — active connection, high strategic fit',aid:'470655b0'},
+
+    // ── Q4 2027 ─────────────────────────────────────────────
+    {id:'orbital-materials',tier:2,q:'q4-2027',raising:false,dc:false,
+     name:'Orbital Materials',sector:'Deep Tech / Materials',sb:'bg-rose-900',st:'text-rose-300',
+     stage:'Series A (Unknown, Oct 2024)',nr:'Series B',nrd:'Q4 2027',
+     desc:'AI-designed advanced materials for energy, aerospace and industrial applications',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2027',
+     fd:'Series B expected Q4 2027. Target outreach: Oct 2027.',str:0,sl:'No contact data',aid:'23ad575e'},
+
+    {id:'ati',tier:2,q:'q4-2027',raising:false,dc:false,
+     name:'Automated Tire (ATI)',sector:'Automotive Services',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Unknown',nr:'Series A',nrd:'Q4 2027',
+     desc:'Fully automated tire-changing robots for high-volume automotive service centres',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series A expected Q4 2027',
+     fd:'Series A expected Q4 2027. Target outreach: Jul 2027.',str:0,sl:'No contact data',aid:'c4fba179'},
+
+    {id:'quartermaster-ai',tier:2,q:'q4-2027',raising:false,dc:false,
+     name:'Quartermaster AI',sector:'Defense / Procurement',sb:'bg-slate-700',st:'text-slate-300',
+     stage:'Series A ($43M, May 2026)',nr:'Series B',nrd:'Q4 2027',
+     desc:'AI procurement and supply chain platform for defense and government contractors',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q4 2027',
+     fd:'Series B expected Q4 2027. Target outreach: Aug 2027.',str:0,sl:'No contact data',aid:'a83ba07f'},
+
+    {id:'airwallex',tier:1,q:'q4-2027',raising:false,dc:true,
+     name:'Airwallex',sector:'FinTech · Payments',sb:'bg-indigo-900',st:'text-indigo-300',
+     stage:'Series F ($330M, Dec 2025)',nr:'Series G+',nrd:'Q4 2027',
+     desc:'Global payments and financial infrastructure platform',
+     lc:'Jun 4, 2026',ct:'Email — coordination with BNVT Capital',
+     narr:'Troy has been pursuing a co-invest allocation. Access is being coordinated through BNVT Capital. Series G+ is a future raise — IC diligence and relationship maintenance ongoing.',
+     na:'Maintain relationship via BNVT Capital — re-engage ahead of Series G+ in Q4 2027',
+     fd:'Series G+ expected Q4 2027. Target outreach: Sep 2027.',str:2,sl:'Relationship currently via intermediary, not direct',aid:'2d7d42bc'},
+
+    {id:'sandra-ai',tier:1,q:'q4-2027',raising:false,dc:true,
+     name:'Sandra AI',sector:'Automotive AI · YC',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Seed ($1.5M, Dec 2024)',nr:'Series A',nrd:'Q4 2027',
+     desc:'AI receptionists and sales agents for car dealerships · YC-backed',
+     lc:'Mar 23, 2026',ct:'In-person lunch',
+     narr:'Jon and Troy had an in-person lunch with the CEO (Badr El Idrissi) in March 2026, at which point the seed round had just closed. The team is warm with both founders. YC-backed with a direct dealership use case well aligned to TFG\'s portfolio.',
+     na:'Re-engage ahead of Series A in Q4 2027 — confirm timeline and discuss TFGI participation',
+     fd:'Series A expected Q4 2027. Outreach date: Jul 2027.',str:3,sl:'Good — warm founder relationship, in-person meeting done',aid:'811ad210'},
+
+    {id:'pano',tier:2,q:'q4-2027',raising:false,dc:false,
+     name:'Pano',sector:'Insurance / Fire Tech',sb:'bg-rose-900',st:'text-rose-300',
+     stage:'Series B ($44M, Jun 2025)',nr:'Series C',nrd:'Q4 2027',
+     desc:'AI-powered early wildfire detection and situational awareness platform',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series C expected Q4 2027',
+     fd:'Series C expected Q4 2027. Target outreach: Aug 2027.',str:0,sl:'No contact data',aid:'68e0432b'},
+
+    // ── Q1 2028 ─────────────────────────────────────────────
+    {id:'stress-free-auto',tier:2,q:'q1-2028',raising:false,dc:false,
+     name:'Stress-Free Auto Care',sector:'Automotive Services',sb:'bg-blue-900',st:'text-blue-300',
+     stage:'Series A (Unknown, 2021)',nr:'Series B',nrd:'Q1 2028',
+     desc:'Tech-enabled auto repair marketplace with transparent pricing and digital workflow',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series B expected Q1 2028',
+     fd:'Series B expected Q1 2028. Target outreach: Oct 2027.',str:0,sl:'No contact data',aid:'61038f53'},
+
+    // ── Q2 2028 ─────────────────────────────────────────────
+    {id:'genlogs',tier:2,q:'q2-2028',raising:false,dc:true,
+     name:'GenLogs',sector:'Logistics',sb:'bg-amber-900',st:'text-amber-300',
+     stage:'Series C (May 2026)',nr:'Series D',nrd:'Q2 2028',
+     desc:'Real-time freight intelligence and logistics data platform',
+     lc:'Apr 15, 2026',ct:'Meeting — CEO attended by Charlie Daniel',
+     narr:'Direct meeting with the CEO (Ryan Joyce) in April 2026, attended by Charlie Daniel. Troy\'s June 4 note described GenLogs as an "incredible information source but more difficult to find end-use applications." A Series B co-invest was flagged as potentially inbound.',
+     na:'Define a specific TFG use case before committing — revisit co-invest opportunity at Series D',
+     fd:'Series D expected Q2 2028. Long time horizon — maintain the relationship.',str:2,sl:'Weak direct — one CEO meeting, use-case clarity needed',aid:'763b16c8'},
+
+    {id:'guidde',tier:2,q:'q2-2028',raising:false,dc:false,
+     name:'Guidde',sector:'Enterprise SaaS',sb:'bg-purple-900',st:'text-purple-300',
+     stage:'Series C ($50M, Feb 2026)',nr:'Series D',nrd:'Q2 2028',
+     desc:'AI-powered video documentation platform for software teams and customer support',
+     lc:'—',ct:'Pipeline tracking',narr:'In TFGI pipeline tracking.',
+     na:'Initiate outreach — Series D expected Q2 2028',
+     fd:'Series D expected Q2 2028. Target outreach: Feb 2028.',str:0,sl:'No contact data',aid:'df237dd5'},
+
+    // ── TBD ─────────────────────────────────────────────────
+    {id:'somana',tier:1,q:'tbd',raising:false,dc:true,
+     name:'Somana',sector:'AI · Machine Vision',sb:'bg-violet-900',st:'text-violet-300',
+     stage:'Stealth / Pre-Seed',nr:'Seed',nrd:'TBD',
+     desc:'Machine vision AI · Stealth · New York City · POC deployed with TFG',
+     lc:'Jun 4, 2026',ct:'Email — ongoing thread',
+     narr:'Jon Goh was "very impressed with their capability, speed and agility." Two machine vision systems have been deployed as a live POC. The founders were invited to TFGI\'s MLB/250th America gala dinner in May.',
+     na:'Confirm gala dinner follow-up — maintain warmth and track seed raise timing as they emerge from stealth',
+     fd:'No public raise yet — stealth stage. POC already live with TFG.',str:2,sl:'Weak in Attio — operationally very warm, POC deployed',aid:'3a12b12d'},
+
+    {id:'collaborative-robotics',tier:2,q:'tbd',raising:false,dc:false,
+     name:'Collaborative Robotics',sector:'Robotics',sb:'bg-orange-900',st:'text-orange-300',
+     stage:'Series B ($100M, Apr 2024)',nr:'Series C',nrd:'TBD',
+     desc:'Collaborative robot (cobot) systems for warehouse and manufacturing automation',
+     lc:'—',ct:'Pipeline tracking — confirm with JG when raising next',narr:'Last spoke January 2026 (per JG). Next round timing to be confirmed with Jon Goh.',
+     na:'Confirm with Jon Goh on next raise timing — last spoke Jan 2026',
+     fd:'Series C timing TBD. Last spoke Jan 2026.',str:0,sl:'No contact data',aid:'b7405580'},
   ]
 
   const STRENGTH = ['','Very Weak','Weak','Good','Strong','Very Strong']
 
-  // ── Calendar tile HTML ─────────────────────────────────
   function calTile(c) {
     const cls = c.q === 'active' ? 'tile tile-active' : c.tier === 1 ? 'tile tile-1' : 'tile tile-2'
     return `<div class="${cls}" data-id="${c.id}" data-tier="${c.tier}" data-dc="${c.dc}">
-      <div class="flex items-start justify-between gap-1 mb-1.5">
-        <div class="font-semibold text-white text-[13px] leading-tight">${c.name}</div>
-        ${c.dc ? `<span class="text-yellow-400 text-[11px] shrink-0">★</span>` : ''}
+      <div class="flex items-start justify-between gap-1 mb-1">
+        <div class="font-semibold text-white text-[12px] leading-tight">${c.name}</div>
+        ${c.dc ? `<span class="text-yellow-400 text-[10px] shrink-0">★</span>` : ''}
       </div>
-      <div class="flex items-center gap-1.5 flex-wrap">
+      <div class="flex items-center gap-1 flex-wrap">
         ${c.q === 'active' ? `<span class="relative flex h-1.5 w-1.5 mr-0.5 shrink-0"><span class="ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span></span>` : ''}
-        <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded ${c.sb} ${c.st}">${c.sector}</span>
+        <span class="text-[8px] font-semibold px-1.5 py-0.5 rounded ${c.sb} ${c.st} truncate max-w-[120px]">${c.sector}</span>
         <span class="text-[9px] text-gray-500">${c.nr}</span>
       </div>
     </div>`
   }
 
-  // ── List tile HTML ─────────────────────────────────────
   function listTile(c) {
     const cls = c.q === 'active' ? 'list-tile list-tile-active' : c.tier === 1 ? 'list-tile list-tile-1' : 'list-tile list-tile-2'
     const urgencyChip = c.q === 'active'
@@ -637,7 +994,7 @@
       : `<span class="text-[10px] text-gray-500">${c.nrd}</span>`
     return `<div class="${cls}" data-id="${c.id}" data-tier="${c.tier}" data-dc="${c.dc}" data-raising="${c.raising || c.q==='active'}">
       <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2 mb-1">
+        <div class="flex items-center gap-2 mb-0.5">
           <span class="font-semibold text-white text-sm">${c.name}</span>
           ${c.dc ? `<span class="text-yellow-400 text-[11px]">★</span>` : ''}
           <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded ${c.sb} ${c.st}">${c.sector}</span>
@@ -651,8 +1008,8 @@
     </div>`
   }
 
-  // ── Drawer ─────────────────────────────────────────────
   function dots(n) {
+    if (!n) return '<span class="text-gray-600 text-sm">—</span>'
     return `<span style="color:#818cf8">${'●'.repeat(n)}</span><span style="color:#374151">${'○'.repeat(5-n)}</span>`
   }
 
@@ -674,7 +1031,7 @@
     rEl.className = `text-sm font-semibold ${c.q==='active' ? 'text-red-400' : 'text-white'}`
     document.getElementById('d-fundraise-detail').textContent = c.fd
     document.getElementById('d-dots').innerHTML = dots(c.str)
-    document.getElementById('d-strength-label').textContent = `${STRENGTH[c.str]} — ${c.sl}`
+    document.getElementById('d-strength-label').textContent = c.str ? `${STRENGTH[c.str]} — ${c.sl}` : c.sl
     document.getElementById('d-attio').textContent = c.aid
     document.getElementById('drawer').classList.add('open')
     const bd = document.getElementById('backdrop')
@@ -690,7 +1047,6 @@
     document.body.style.overflow = ''
   }
 
-  // ── Page switch ────────────────────────────────────────
   let currentPage = 'calendar'
   function showPage(p) {
     currentPage = p
@@ -703,10 +1059,9 @@
     if (p === 'list') applyListFilter(); else applyCalFilter()
   }
 
-  // ── Calendar filter ────────────────────────────────────
   let calTier = 'all', calFounder = false
   function applyCalFilter() {
-    const cols = ['active','q3-2026','q4-2026','q1-2027','q3-2027','q4-2027','q2-2028','tbd']
+    const cols = ['active','q3-2026','q4-2026','q1-2027','q2-2027','q3-2027','q4-2027','q1-2028','q2-2028','tbd']
     let visible = CO.filter(c => {
       if (calTier !== 'all' && String(c.tier) !== calTier) return false
       if (calFounder && !c.dc) return false
@@ -720,7 +1075,6 @@
     document.getElementById('count-label').textContent = `${visible.length} companies`
   }
 
-  // ── List filter ────────────────────────────────────────
   let listRaising = false, listTier = 'all', listFounder = false
   function applyListFilter() {
     let visible = CO.filter(c => {
@@ -729,21 +1083,16 @@
       if (listFounder && !c.dc) return false
       return true
     })
-    // sort: active first, then by quarter
-    const qOrder = {'active':0,'q3-2026':1,'q4-2026':2,'q1-2027':3,'q3-2027':4,'q4-2027':5,'q2-2028':6,'tbd':7}
-    visible.sort((a,b) => (qOrder[a.q]||9) - (qOrder[b.q]||9))
-
+    const qOrder = {'active':0,'q3-2026':1,'q4-2026':2,'q1-2027':3,'q2-2027':4,'q3-2027':5,'q4-2027':6,'q1-2028':7,'q2-2028':8,'tbd':9}
+    visible.sort((a,b) => (qOrder[a.q]??9) - (qOrder[b.q]??9))
     const container = document.getElementById('list-container')
     container.innerHTML = visible.map(listTile).join('')
     container.querySelectorAll('.list-tile').forEach(t => t.addEventListener('click', () => openDrawer(t.dataset.id)))
     document.getElementById('count-label').textContent = `${visible.length} companies`
   }
 
-  // ── Init ───────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     applyCalFilter()
-
-    // Calendar filters
     document.querySelectorAll('#cal-filters .f-btn:not(#cal-founder-btn)').forEach(btn => {
       btn.addEventListener('click', () => {
         calTier = btn.dataset.filter
@@ -755,8 +1104,6 @@
     document.getElementById('cal-founder-btn').addEventListener('click', function() {
       calFounder = !calFounder; this.classList.toggle('on', calFounder); applyCalFilter()
     })
-
-    // List primary filters (All / Raising Now)
     document.querySelectorAll('#list-filters [data-lfilter]').forEach(btn => {
       btn.addEventListener('click', () => {
         listRaising = btn.dataset.lfilter === 'raising'
@@ -765,7 +1112,6 @@
         applyListFilter()
       })
     })
-    // List tier sub-filters
     document.querySelectorAll('#list-filters [data-ltier]').forEach(btn => {
       btn.addEventListener('click', () => {
         listTier = btn.dataset.ltier
@@ -777,7 +1123,6 @@
     document.getElementById('list-founder-btn').addEventListener('click', function() {
       listFounder = !listFounder; this.classList.toggle('on', listFounder); applyListFilter()
     })
-
     document.getElementById('backdrop').addEventListener('click', closeDrawer)
     document.getElementById('drawer-close').addEventListener('click', closeDrawer)
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer() })
